@@ -40,7 +40,7 @@
           ajaxUrl += (!$.isEmptyObject(ajaxQueryParameters)) ? '?' + $.param(ajaxQueryParameters) : '';
 
           // Show Ajax Throbber, automagically removed when content is replaced/page reloaded.
-          $( '#openagenda-wrapper' ).append(Drupal.theme.ajaxProgressIndicatorFullscreen());
+          $( '#openagenda-wrapper' ).append('<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>');
 
           // Ajax query execution.
           Drupal.ajax({

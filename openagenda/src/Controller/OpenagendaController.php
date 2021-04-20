@@ -103,7 +103,10 @@ class OpenagendaController extends ControllerBase {
           'openagenda/openagenda.event',
         ],
         'drupalSettings' => [
-          'openagenda' => ['isEvent' => TRUE],
+          'openagenda' => [
+            'isEvent' => TRUE,
+            'nid' => $node->id(),
+          ],
         ],
       ],
     ];
