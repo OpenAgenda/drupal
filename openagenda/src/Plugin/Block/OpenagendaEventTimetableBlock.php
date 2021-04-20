@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "openagenda_event_timetable_block",
  *   admin_label = @Translation("OpenAgenda event timetable"),
  *   category = @Translation("OpenAgenda filters"),
- *   context_definitions = {
+ *   context = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   },
  * )

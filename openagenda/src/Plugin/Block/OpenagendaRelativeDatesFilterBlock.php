@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "openagenda_relative_dates_filter_block",
  *   admin_label = @Translation("OpenAgenda relative dates filter"),
  *   category = @Translation("OpenAgenda filters"),
- *   context_definitions = {
+ *   context = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   },
  * )

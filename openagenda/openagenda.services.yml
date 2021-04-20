@@ -5,7 +5,7 @@ services:
 
   openagenda.path_processor:
     class: Drupal\openagenda\PathProcessor\OpenagendaPathProcessor
-    arguments: ['@path_alias.path_processor', '@entity_type.manager', '@language_manager']
+    arguments: ['@path_processor_alias', '@entity_type.manager', '@language_manager']
     tags:
       - { name: path_processor_inbound, priority: 60 }
       - { name: path_processor_outbound, priority: 200 }

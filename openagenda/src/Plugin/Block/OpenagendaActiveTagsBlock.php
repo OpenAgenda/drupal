@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "openagenda_active_tags_block",
  *   admin_label = @Translation("OpenAgenda active tags"),
  *   category = @Translation("OpenAgenda filters"),
- *   context_definitions = {
+ *   context = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   },
  * )
