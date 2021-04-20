@@ -57,7 +57,7 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
       $configuration['field_definition'],
       $configuration['settings'],
       $configuration['third_party_settings'],
-      $container->get('openagenda.helper'),
+      $container->get('openagenda.helper')
     );
   }
 
