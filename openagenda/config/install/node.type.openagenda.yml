@@ -1,0 +1,11 @@
+langcode: en
+dependencies:
+  enforced:
+    module:
+    - openagenda
+name: 'OpenAgenda'
+type: openagenda
+description: 'Displays an agenda from OpenAgenda.'
+help: 'Displays an agenda from OpenAgenda.'
+new_revision: false
+preview_mode: 1

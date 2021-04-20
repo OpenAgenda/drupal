@@ -1,0 +1,8 @@
+name: OpenAgenda
+description: 'Integrates OpenAgenda views.'
+package: OpenAgenda
+
+type: module
+core_version_requirement: ^8.8 || ^9
+
+configure: openagenda.form

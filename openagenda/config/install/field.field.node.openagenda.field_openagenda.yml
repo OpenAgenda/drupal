@@ -1,0 +1,15 @@
+langcode: en
+dependencies:
+  config:
+  - field.storage.node.field_openagenda
+  - node.type.openagenda
+id: node.openagenda.field_openagenda
+field_name: field_openagenda
+entity_type: node
+bundle: openagenda
+label: 'OpenAgenda configuration'
+description: ''
+required: true
+default_value: ''
+settings: { }
+field_type: openagenda

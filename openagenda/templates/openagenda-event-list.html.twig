@@ -1,0 +1,25 @@
+<article id="event-{{ event.origin.uid }}" class="oa-event oa-list-item">
+  <div class="oa-event-wrapper">
+    <header class="oa-event-header">
+      <h2 class="oa-event-title">
+        <a class="oa-event-permalink" href="{{ event.local_url }}">
+          {{ event.title }}
+        </a>
+      </h2>
+      <div class="oa-meta">
+        <p class="oa-event-timing">
+          {{ relative_timing }}
+        </p>
+        <p class="oa-event-range">
+          {{ event.range }}
+        </p>
+      </div>
+    </header>
+    <p class="oa-event-short-description">{{ event.description }}</p>
+    <div class="oa-event-thumbnail">
+      <a class="oa-event-permalink" href="{{ event.local_url }}">
+        <img src="{{ event.image }}" alt="{{ event.title }}" />
+      </a>
+    </div>
+  </div>
+</article>

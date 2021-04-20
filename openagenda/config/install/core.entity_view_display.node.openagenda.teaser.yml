@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - core.entity_view_mode.node.teaser
+  - field.field.node.openagenda.field_openagenda
+  - node.type.openagenda
+id: node.openagenda.teaser
+targetEntityType: node
+bundle: openagenda
+mode: teaser
+content: { }
+hidden:
+  field_openagenda: true

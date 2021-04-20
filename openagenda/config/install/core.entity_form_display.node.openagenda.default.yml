@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - field.field.node.openagenda.field_openagenda
+  - node.type.openagenda
+id: node.openagenda.default
+targetEntityType: node
+bundle: openagenda
+mode: default
+content:
+  field_openagenda:
+    type: openagenda_widget
+    weight: 0
+    settings: { }
+    third_party_settings: {  }
+hidden: { }

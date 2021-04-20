@@ -1,0 +1,31 @@
+#openagenda-wrapper ul {
+  padding:0;
+  list-style-type: none;
+}
+
+#openagenda-wrapper ul li {
+  border-top: solid 1px #413a42;
+  margin-top: 20px;
+}
+
+#openagenda-wrapper ul li.first {
+  border-top: none;
+  margin-top: 0;
+}
+
+#openagenda-wrapper li a, #openagenda-wrapper li a:hover, #openagenda-wrapper li a:active {
+  text-decoration: none;
+  border-bottom: none;
+}
+
+#openagenda-wrapper .exports {
+  float: right;
+}
+
+#openagenda-wrapper .exports a {
+  display: inline-block;
+  padding: 1px 2px;
+  border: solid 1px #413a42;
+  text-decoration: none;
+  text-transform: uppercase;
+}

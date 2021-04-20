@@ -1,0 +1,48 @@
+@charset "UTF-8";
+.filters {
+  margin: 0 0 15px;
+  display: inline;
+}
+.filters ul {
+  display: inline;
+}
+.filters a {
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 6px 10px;
+  border-radius: 10px;
+  position: relative;
+}
+.filters li {
+  display: inline;
+}
+.filters .active {
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+.filters .active a {
+  background: #fafafa;
+  color: #413a42;
+  padding-right: 30px;
+  border-bottom: none;
+}
+.filters .active a:after {
+  content: "✔";
+  font-size: 1.3em;
+  height: 20px;
+  line-height: 30px;
+  font-weight: bold;
+  position: absolute;
+  color: #41acdd;
+  right: 2px;
+  top: -1px;
+  width: 20px;
+}
+.filters .active a:hover {
+  background: #da4453;
+  color: #fff;
+}
+.filters .active a:hover:after {
+  content: "❌";
+  color: #fff;
+}

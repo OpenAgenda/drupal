@@ -1,0 +1,29 @@
+services:
+  openagenda.connector:
+    class: Drupal\openagenda\OpenagendaConnector
+    arguments: ['@http_client', '@request_stack']
+
+  openagenda.path_processor:
+    class: Drupal\openagenda\PathProcessor\OpenagendaPathProcessor
+    arguments: ['@path_alias.path_processor', '@entity_type.manager', '@language_manager']
+    tags:
+      - { name: path_processor_inbound, priority: 60 }
+      - { name: path_processor_outbound, priority: 200 }
+
+  openagenda.agenda_processor:
+    class: Drupal\openagenda\OpenagendaAgendaProcessor
+    arguments: ['@openagenda.connector', '@openagenda.helper', '@request_stack', '@pager.manager', '@pager.parameters']
+
+  openagenda.event_processor:
+    class: Drupal\openagenda\OpenagendaEventProcessor
+    arguments: ['@datetime.time', '@date.formatter']
+
+  openagenda.event_converter:
+    class: Drupal\openagenda\ParamConverter\OpenagendaEventConverter
+    arguments: ['@openagenda.connector', '@openagenda.event_processor', '@openagenda.helper', '@request_stack']
+    tags:
+      - { name: paramconverter }
+
+  openagenda.helper:
+    class: Drupal\openagenda\OpenagendaHelper
+    arguments: ['@serialization.json', '@language_manager', '@current_user']    

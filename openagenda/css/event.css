@@ -1,0 +1,11 @@
+.oa-single-event .oa-event-navigation {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: -10px;
+}
+
+.oa-single-event .oa-event-navigation .oa-agenda-link {
+  position: absolute;
+  left:0;
+}

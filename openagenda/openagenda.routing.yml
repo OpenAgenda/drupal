@@ -1,0 +1,35 @@
+openagenda.ajax:
+  path: '/openagenda/{node}/ajax' 
+  defaults: 
+    _controller: '\Drupal\openagenda\Controller\OpenagendaController::ajaxCallback' 
+  options:
+    parameters:
+      node:
+        type: entity:node
+  requirements: 
+    _permission: 'access content'
+    _entity_access: node.view
+
+openagenda.form:
+  path: '/admin/config/services/openagenda'
+  defaults:
+    _form: '\Drupal\openagenda\Form\OpenagendaForm'
+    _title: 'OpenAgenda settings'
+  requirements:
+    _permission: 'administer openagenda'
+
+openagenda.event:
+  path: /node/{node}/event/{event}
+  defaults:
+    _controller: '\Drupal\openagenda\Controller\OpenagendaController::event'
+  options:
+    parameters:
+      node:
+        type: entity:node
+      event:
+        type: openagenda_event
+  requirements: 
+    _permission: 'access content'
+    _entity_access: node.view
+    node: \d+
+    event: '[a-z0-9-_]+'

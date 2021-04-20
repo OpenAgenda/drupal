@@ -1,0 +1,30 @@
+<article id="event-{{ event.origin.uid }}" class="oa-event oa-single-event">
+	<div class="oa-event-navigation">
+		{% if agenda_url %}
+			<a class="oa-agenda-link" href="{{ agenda_url }}">{{ 'Back to agenda'|t }}</a>
+		{% endif %}
+
+		{% if index and total %}
+			{% if previous_event_url %}
+				<a href="{{ previous_event_url }}">{{ 'Previous'|t }}</a>
+			{% else %}
+				<span>{{ 'Previous'|t }}</span>
+			{% endif %}
+
+			{{ index }}/{{ total }}
+
+			{% if next_event_url %}
+				<a href="{{ next_event_url }}">{{ 'Next'|t }}</a>
+			{% else %}
+				<span>{{ 'Next'|t }}</span>
+			{% endif %}
+		{% endif %}
+	</div>
+	<div class="oa-event-wrapper">
+		<header class="oa-event-header">
+			<p class="oa-entry-description">{{ event.description }}</p>
+			<div class="oa-event-thumbnail"><img src="{{ event.image }}" alt="{{ event.title }}" /></div>
+		</header>
+		<div class="oa-event-details">{{ event.html }}</div>
+	</div>
+</article>

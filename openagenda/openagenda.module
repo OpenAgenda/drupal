@@ -1,0 +1,297 @@
+<?php
+
+/**
+ * @file
+ * Integration of OpenAgenda.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_help().
+ */
+function openagenda_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.openagenda':
+      return t('
+        <h2>Help OpenAgenda... à remplir</h2>
+      ');
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Remove the ability to non programatically create a new OpenAgenda UID field
+ * as our use case doesn't really work with several OpenAgenda fields attached
+ * to the same content.
+ * This limits the ability to attach the field to other content types to the
+ * re-use of the base field_openagenda field.
+ */
+function openagenda_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  unset($form['add']['new_storage_type']['#options']['General']['openagenda']);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function openagenda_theme($existing, $type, $theme, $path) {
+  return [
+    // Main agenda view (event list).
+    'openagenda_agenda' => [
+      'render element' => 'children',
+      'template' => 'openagenda-agenda',
+      'path' => $path . '/templates',
+      'variables' => [
+        'entity' => NULL,
+        'events' => [],
+        'total' => 0,
+        'filters' => [],
+        'pager' => NULL,
+        'lang' => 'fr',
+      ],
+    ],
+    // Event as displayed in the list (agenda).
+    'openagenda_event_list' => [
+      'render element' => 'children',
+      'template' => 'openagenda-event-list',
+      'path' => $path . '/templates',
+      'variables' => [
+        'event' => [],
+        'lang' => 'fr',
+      ],
+    ],
+    // Main event view.
+    'openagenda_event_single' => [
+      'render element' => 'children',
+      'template' => 'openagenda-event-single',
+      'path' => $path . '/templates',
+      'variables' => [
+        'entity' => NULL,
+        'event' => [],
+        'oac' => '',
+        'lang' => 'fr',
+      ],
+    ],
+    // Renders an event's timetabele.
+    'openagenda_event_timetable' => [
+      'render element' => 'children',
+      'template' => 'openagenda-event-timetable',
+      'path' => $path . '/templates',
+      'variables' => [
+        'event' => [],
+        'lang' => 'fr',
+      ],
+    ],
+    // Renders the currently active tags.
+    'openagenda_active_tags' => [
+      'render element' => 'children',
+      'template' => 'openagenda-active-tags',
+      'path' => $path . '/templates/filters',
+      'variables' => [
+        'agenda_uid' => '',
+        'lang' => 'fr',
+      ],
+    ],
+    // Renders the calendar filter.
+    'openagenda_calendar_filter' => [
+      'render element' => 'children',
+      'template' => 'openagenda-calendar-filter',
+      'path' => $path . '/templates/filters',
+      'variables' => [
+        'agenda_uid' => '',
+        'lang' => 'fr',
+      ],
+    ],
+    // Renders the map filter.
+    'openagenda_map_filter' => [
+      'render element' => 'children',
+      'template' => 'openagenda-map-filter',
+      'path' => $path . '/templates/filters',
+      'variables' => [
+        'agenda_uid' => '',
+        'event_uid' => '',
+        'map_tiles_url' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'auto_search' => TRUE,
+        'lang' => 'fr',
+      ],
+    ],
+    // Renders the relative dates filter.
+    'openagenda_relative_dates_filter' => [
+      'render element' => 'children',
+      'template' => 'openagenda-relative-dates-filter',
+      'path' => $path . '/templates/filters',
+      'variables' => [
+        'agenda_uid' => '',
+        'lang' => 'fr',
+      ],
+    ],
+    // Renders the search filter.
+    'openagenda_search_filter' => [
+      'render element' => 'children',
+      'template' => 'openagenda-search-filter',
+      'path' => $path . '/templates/filters',
+      'variables' => [
+        'agenda_uid' => '',
+        'placeholder' => t('Search in this agenda'),
+        'lang' => 'fr',
+      ],
+    ],
+    // Renders the tag filter.
+    'openagenda_tag_filter' => [
+      'render element' => 'children',
+      'template' => 'openagenda-tag-filter',
+      'path' => $path . '/templates/filters',
+      'variables' => [
+        'agenda_uid' => '',
+        'tag_groups_count' => 1,
+        'lang' => 'fr',
+      ],
+    ],
+    // Renders the links to export the agenda in various formats
+    // (XLS, JSON, RSS, PDF)
+    'openagenda_export_links' => [
+      'render element' => 'children',
+      'template' => 'openagenda-export-links',
+      'path' => $path . '/templates',
+      'variables' => [
+        'entity' => NULL,
+        'filters' => '',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Preprocess function for event list.
+ *
+ * Theme events and compute their links.
+ */
+function openagenda_preprocess_openagenda_agenda(&$variables) {
+  $helper = Drupal::service('openagenda.helper');
+
+  // Make sure we have an OpenAgenda node.
+  if (!empty($node = $variables['entity']) && $node->hasField('field_openagenda')) {
+    // This gets forwarded to the exports template.
+    $variables['agenda_uid'] = $node->get('field_openagenda')->uid;
+    $variables['search_string'] = !empty($variables['filters']) ? http_build_query(['oaq' => $variables['filters']]) : '';
+
+    foreach ($variables['events'] as $key => &$event) {
+      // We use the event's key in the array as index.
+      $oac = $helper->encodeOac($key, $variables['total'], $variables['filters']);
+
+      // Localize event according to the language set in the node.
+      $helper->localizeEvent($event, $node->get('field_openagenda')->language);
+
+      // Set event local link.
+      $event['local_url'] = $helper->createEventUrl($node, $event['slug'], $oac)->toString();
+
+      $event['content'] = [
+        '#theme' => 'openagenda_event_list',
+        '#event' => $event,
+        '#lang' => $variables['lang'],
+      ];
+    }
+  }
+}
+
+/**
+ * Preprocess function for events in the list.
+ *
+ * Get localized values of the properties, calculate relative timing to event.
+ */
+function openagenda_preprocess_openagenda_event_list(&$variables) {
+  // Add time since/until event.
+  $variables['relative_timing'] = \Drupal::service('openagenda.event_processor')
+    ->processRelativeTimingToEvent($variables['event'], $variables['lang']);
+}
+
+/**
+ * Preprocess function for single event.
+ *
+ * Set index of event / total events for display.
+ * Adds previous and next event links if available.
+ * Filter html content.
+ */
+function openagenda_preprocess_openagenda_event_single(&$variables) {
+  $helper = \Drupal::service('openagenda.helper');
+  $event = $variables['event'];
+
+  $context = !empty($variables['oac']) ? $helper->decodeOac($variables['oac']) : [];
+  $filters = !empty($context['search']) ? $context['search'] : [];
+
+  // Make sure our index and total values make sense.
+  if (isset($context['index']) && isset($context['total'])
+    && $context['total'] > 1  && $context['index'] < $context['total']) {
+    // Make the index human readable.
+    $variables['index'] = $context['index'] + 1;
+    $variables['total'] = $context['total'];
+  }
+
+  // Make sure we have a parent OpenAgenda node.
+  if (!empty($node = $variables['entity']) && $node->hasField('field_openagenda')) {
+    // Agenda link.
+    $agenda_url = Url::fromRoute('entity.node.canonical', ['node' => $node->id()]);
+
+    // Add oaq get parameter if we have filters.
+    if (!empty($filters)) {
+      $agenda_url->setOption('query', ['oaq' => $filters]);
+    }
+
+    $variables['agenda_url'] = $agenda_url->toString();
+
+    // Add a link if we found a previous event with those search parameters.
+    if (!empty($event['previousEventSlug'])) {
+      $previousOac = $helper->encodeOac($context['index'] - 1, $context['total'], $filters);
+      $variables['previous_event_url'] = $helper
+        ->createEventUrl($node, $event['previousEventSlug'], $previousOac)
+        ->toString();
+    }
+
+    // Add a link if we found a next event with those search parameters.
+    if (!empty($event['nextEventSlug'])) {
+      $nextOac = $helper->encodeOac($context['index'] + 1, $context['total'], $filters);
+      $variables['next_event_url'] = $helper
+        ->createEventUrl($node, $event['nextEventSlug'], $nextOac)
+        ->toString();
+    }
+
+    // Need to get the event's html content through a #markup
+    // render array to correctly render the tags.
+    $html = $event['html'];
+    $allowed_tags = Xss::getAdminTagList();
+
+    // Alter the html if we made the request with include_embedded, as iframes
+    // get stripped otherwise. Also need a quick trick to prevent the tags'
+    // style attribute from getting filtered out.
+    if ($node->get('field_openagenda')->include_embedded) {
+      // @todo remove this when we have confirmed we can use input from service
+      // with CSS file instead of inline style.
+      $allowed_tags[] = 'iframe';
+      $html = preg_replace('/(<[div|iframe][^>]*) style="([^>]*>)/', '$1 data-style="$2', $html);
+      $html = Xss::filter($html, $allowed_tags);
+      $html = preg_replace('/(<[div|iframe][^>]*) data-style="([^>]*>)/', '$1 style="$2', $html);
+      $html = Markup::create(preg_replace('/(<[div|iframe][^>]*) data-style="([^>]*>)/', '$1 style="$2', $html));
+    }
+
+    $variables['event']['html'] = [
+      '#markup' => $html,
+      '#allowed_tags' => $allowed_tags,
+    ];
+  }
+}
+
+/**
+ * Preprocess function for an agenda's export links.
+ */
+function openagenda_preprocess_openagenda_export_links(&$variables) {
+  // For easier twig syntax.
+  if (!empty($node = $variables['entity']) && $node->hasField('field_openagenda')) {
+    $variables['agenda_uid'] = $node->get('field_openagenda')->uid;
+    $variables['search_string'] = !empty($variables['filters']) ? http_build_query(['oaq' => $variables['filters']]) : '';
+  }
+}

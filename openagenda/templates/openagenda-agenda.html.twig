@@ -1,0 +1,22 @@
+<div id="openagenda-wrapper">
+  {% if not total == 0 %}
+    {% trans %}
+      1 event.
+    {% plural total %}
+      {{ total }} events.
+    {% endtrans %}
+    {% include "openagenda-export-links.html.twig" %}
+  {% else %}
+    {% trans %}
+      There are no events with these search parameters
+    {% endtrans %}
+  {% endif %}
+  <ul>
+    {% for event in events %}
+      <li{{ loop.first ? ' class="first"' }} >
+        {{ event.content }}
+      </li>        
+    {% endfor %}    
+  </ul>
+  {{ pager }}
+</div>
