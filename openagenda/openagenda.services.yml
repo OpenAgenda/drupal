@@ -12,7 +12,7 @@ services:
 
   openagenda.agenda_processor:
     class: Drupal\openagenda\OpenagendaAgendaProcessor
-    arguments: ['@openagenda.connector', '@openagenda.helper', '@request_stack', '@pager.manager', '@pager.parameters']
+    arguments: ['@openagenda.connector', '@openagenda.helper', '@request_stack']
 
   openagenda.event_processor:
     class: Drupal\openagenda\OpenagendaEventProcessor

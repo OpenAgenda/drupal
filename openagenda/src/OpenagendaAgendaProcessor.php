@@ -2,8 +2,6 @@
 
 namespace Drupal\openagenda;
 
-use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -36,28 +34,12 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
   protected $requestStack;
 
   /**
-   * The pager manager service.
-   *
-   * @var \Drupal\Core\Pager\PagerManagerInterface
-   */
-  protected $pagerManager;
-
-  /**
-   * The pager parameters service.
-   *
-   * @var \Drupal\Core\Pager\PagerParametersInterface
-   */
-  protected $pagerParameters;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(OpenagendaConnectorInterface $connector, OpenagendaHelperInterface $helper, RequestStack $request_stack, PagerManagerInterface $pager_manager, PagerParametersInterface $pager_parameters) {
+  public function __construct(OpenagendaConnectorInterface $connector, OpenagendaHelperInterface $helper, RequestStack $request_stack) {
     $this->connector = $connector;
     $this->helper = $helper;
     $this->requestStack = $request_stack;
-    $this->pagerManager = $pager_manager;
-    $this->pagerParameters = $pager_parameters;
   }
 
   /**
@@ -77,7 +59,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
       $agenda_uid = $entity->get('field_openagenda')->uid;
       $events_per_page = $entity->get('field_openagenda')->events_per_page;
       // Get request parameters : page.
-      $offset = $this->pagerParameters->findPage() * $events_per_page;
+      $offset = pager_find_page() * $events_per_page;
       // Get request parameters : filters.
       $oaq = $this->requestStack->getCurrentRequest()->get('oaq');
       // If no oaq parameter in request, set filters to an empty array.
@@ -110,7 +92,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
         ];
 
         if (!empty($data['total'])) {
-          $this->pagerManager->createPager($data['total'], $events_per_page);
+          pager_default_initialize($data['total'], $events_per_page);
           $build['#pager'] = ['#type' => 'pager'];
         }
       }
