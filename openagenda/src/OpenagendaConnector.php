@@ -108,6 +108,11 @@ class OpenagendaConnector implements OpenagendaConnectorInterface {
       $data = $this->getData($agenda_uid, $filters, $offset, $limit, $include_embedded, TRUE);
     }
 
+    // Shift keys in the events array according to the offset.
+    if ($offset > 0) {
+      $data['events'] = array_combine(range($offset, $offset + count($data['events']) - 1), $data['events']);
+    }
+
     // Add filters to the data for non-recursive call.
     if (!$include_passed) {
       $data['filters'] = $filters;
