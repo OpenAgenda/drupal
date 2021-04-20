@@ -10,7 +10,10 @@ This modules allows you to integrate agendas from [OpenAgenda](https://www.opena
 REQUIREMENTS
 ------------
 
-None.
+Pick the branch corresponding to your Drupal installation:
+- `master` is compatible with Drupal 8.8+/9.
+- `8.3-8.7` is compatible with Drupal 8.3 to 8.7.
+- `8.0-8.2` is compatible with Drupal 8.0 to 8.2.
 
 INSTALLATION
 ------------
@@ -77,3 +80,15 @@ An event timetable block is also available.
 
 You can also include those in the Twig files (see Filters above).
 
+THEMING
+-------
+
+Every display aspect of the module has a corresponding Twig template file sitting in the `templates` directory.  
+
+To customize a template, copy the corresponding Twig file in your theme's directory. Additionnally, you may  
+want to alter the variables available to the templates by adding a corresponding preprocess function in your  
+`mytheme.theme` file.
+
+Never directly modify the module's files!
+
+See [Theming Drupal](https://www.drupal.org/docs/theming-drupal) for more information.
