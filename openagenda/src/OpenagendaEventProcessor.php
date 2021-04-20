@@ -2,7 +2,6 @@
 
 namespace Drupal\openagenda;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -15,13 +14,6 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
   use StringTranslationTrait;
 
   /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
-
-  /**
    * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
@@ -31,8 +23,7 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(TimeInterface $time, DateFormatterInterface $date_formatter) {
-    $this->time = $time;
+  public function __construct(DateFormatterInterface $date_formatter) {
     $this->dateFormatter = $date_formatter;
   }
 
@@ -51,7 +42,7 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
     $relative_timing = '';
 
     if (!empty($event) && !empty($event['timings'])) {
-      $request_time = $this->time->getRequestTime();
+      $request_time = $this->getRequestTime();
 
       // Find next timing for the event.
       foreach ($event['timings'] as $timing) {
@@ -294,6 +285,16 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
     }
 
     return $metadata;
+  }
+
+  /**
+   * Wrapper method for REQUEST_TIME constant.
+   *
+   * @return int
+   *   The request time.
+   */
+  protected function getRequestTime() {
+    return defined('REQUEST_TIME') ? REQUEST_TIME : (int) $_SERVER['REQUEST_TIME'];
   }
 
 }
