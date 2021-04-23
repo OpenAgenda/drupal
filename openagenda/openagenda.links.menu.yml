@@ -1,5 +1,5 @@
 openagenda.form:
-  title: 'OpenAgenda'
+  title: 'OpenAgenda settings'
   description: 'Configure settings for the OpenAgenda module.'
   route_name: openagenda.form
   parent: 'system.admin_config_services'
