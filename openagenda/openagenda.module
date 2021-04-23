@@ -17,9 +17,71 @@ use Drupal\Core\Form\FormStateInterface;
 function openagenda_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.openagenda':
-      return t('
-        <h2>Help OpenAgenda... à remplir</h2>
-      ');
+      $help_html  = '<h1>OpenAgenda</h1>';
+      $help_html .= '<h2>INTRODUCTION</h2>';
+      $help_html .= '<p>This modules allows you to integrate agendas from <a href="https://www.openagenda.com" rel="nofollow" target="_blank">OpenAgenda</a> on your Drupal site.</p>';
+      $help_html .= '<h2>REQUIREMENTS</h2>';
+      $help_html .= '<p>Pick the branch corresponding to your Drupal installation:</p>';
+      $help_html .= '<ul>';
+      $help_html .= '<li><code>master</code> is compatible with Drupal 8.8+/9.</li>';
+      $help_html .= '<li><code>8.3-8.7</code> is compatible with Drupal 8.3 to 8.7.</li>';
+      $help_html .= '<li><code>8.0-8.2</code> is compatible with Drupal 8.0 to 8.2.</li>';
+      $help_html .= '</ul>';
+      $help_html .= '<h2>INSTALLATION</h2>';
+      $help_html .= '<p>Install as usual, see <a href="https://www.drupal.org/docs/extending-drupal/installing-modules" rel="nofollow" target="_blank">Installing Modules</a> for further information.</p>';
+      $help_html .= '<h2>CONFIGURATION</h2>';
+      $help_html .= '<ol>';
+      $help_html .= '<li>Navigate to the settings form through <code>Admin &gt; Configuration &gt; Web services &gt; OpenAgenda</code><br/>
+      or directly at path <code>/admin/config/services/openagenda</code></li>';
+      $help_html .= '<li>Enter your OpenAgenda key in the corresponding field.</li>';
+      $help_html .= '<li>The other settings set up the default configuration options for Openagenda nodes and filters.</li>';
+      $help_html .= '</ol>';
+      $help_html .= '<h2>USAGE</h2>';
+      $help_html .= '<p>The module creates an OpenAgenda content type, containing one OpenAgenda field, in which<br/>
+      you enter the UID of the agenda you want to display.</p>';
+      $help_html .= '<p>Alternatively, you can re-use the OpenAgenda field and attach it to your own content types.</p>';
+      $help_html .= '<h2>FILTERS</h2>';
+      $help_html .= '<p>The module includes an implementation of 5 filter types - map, calendar, relative date, per tag and<br/>
+      search field.<br/>';
+      $help_html .= 'These filters can be added through the block interface (<code>Admin &gt; Structure &gt; Block Layout</code>) to any<br/>
+      of your theme&apos;s region.<br/>';
+      $help_html .= 'The map filter (tiles type) and the search filter(input field placeholder) have custom configuration options<br/>
+      available in their block&apos;s settings.</p>';
+      $help_html .= '<p>The active tags block displays the currently active filters.</p>';
+      $help_html .= '<p>Alternatively, the filters can be integrated directly into the Twig template files of your agenda.<br/>
+      You can either directly use Twig includes :</p>';
+      $help_html .= '<pre><code>{% include "openagenda-active-tags.html.twig" %}<br/>';
+      $help_html .= '{% include "openagenda-search-filter.html.twig" with {&apos;placeholder&apos;: &apos;Search&apos;} %}';
+      $help_html .= '</code></pre>';
+      $help_html .= '<p>or add extra variables in a preprocess function, and print theme into your Twig file :</p>';
+      $help_html .= '<pre><code>function mytheme_preprocess_openagenda_agenda(&amp;$variables) {<br/>';
+      $help_html .= '&nbsp;&nbsp;$variables[&apos;active_tags&apos;] = [<br/>';
+      $help_html .= '&nbsp;&nbsp;&nbsp;&nbsp;&apos;#theme&apos; =&gt; &apos;openagenda_active_tags&apos;,<br/>';
+      $help_html .= '&nbsp;&nbsp;&nbsp;&nbsp;&apos;#agenda_uid&apos; =&gt; $variables[&apos;agenda_uid&apos;],<br/>';
+      $help_html .= '&nbsp;&nbsp;&nbsp;&nbsp;&apos;#lang&apos; =&gt; $variables[&apos;lang&apos;],<br/>';
+      $help_html .= '&nbsp;&nbsp;];<br/><br/>';
+      $help_html .= '&nbsp;&nbsp;$variables[&apos;search_filter&apos;] = [<br/>';
+      $help_html .= '&nbsp;&nbsp;&nbsp;&nbsp;&apos;#theme&apos; =&gt; &apos;openagenda_search_filter&apos;,<br/>';
+      $help_html .= '&nbsp;&nbsp;&nbsp;&nbsp;&apos;#agenda_uid&apos; =&gt; $variables[&apos;agenda_uid&apos;],<br/>';
+      $help_html .= '&nbsp;&nbsp;&nbsp;&nbsp;&apos;#placeholder&apos; =&gt; &apos;Search&apos;,<br/>';
+      $help_html .= '&nbsp;&nbsp;&nbsp;&nbsp;&apos;#lang&apos; =&gt; $variables[&apos;lang&apos;],<br/>';
+      $help_html .= '&nbsp;&nbsp;];<br/>';
+      $help_html .= '}';
+      $help_html .= '</code></pre>';
+      $help_html .= '<p>Check the <code>openagenda.module</code> file for the name of the theme hooks and the theming variables available.</p>';
+      $help_html .= '<h2>EVENT VIEW</h2>';
+      $help_html .= '<p>To show the map when displaying an event, you can use the map filter block and check the <code>Show on events</code> option.<br/>';
+      $help_html .= 'An event timetable block is also available.</p>';
+      $help_html .= '<p>You can also include those in the Twig files (see Filters above).</p>';
+      $help_html .= '<h2>THEMING</h2>';
+      $help_html .= '<p>Every display aspect of the module has a corresponding Twig template file sitting in the <code>templates</code> directory.</p>';
+      $help_html .= '<p>To customize a template, copy the corresponding Twig file in your theme&apos;s directory. Additionnally, you may<br/>
+      want to alter the variables available to the templates by adding a corresponding preprocess function in your<br/>';
+      $help_html .= '<code>mytheme.theme</code> file.</p>';
+      $help_html .= '<p>Never directly modify the module&apos;s files!</p>';
+      $help_html .= '<p>See <a href="https://www.drupal.org/docs/theming-drupal" rel="nofollow" target="_blank">Theming Drupal</a> for more information.</p>';
+
+      return $help_html;
   }
 }
 
