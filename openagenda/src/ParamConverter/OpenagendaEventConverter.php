@@ -75,7 +75,7 @@ class OpenagendaEventConverter implements ParamConverterInterface {
       // If an oac parameter is provided, we first try to get an event triplet
       // to get previous, current & next event in one request.
       if (!empty($oac)) {
-        $context = $this->helper->decodeOac($oac);
+        $context = $this->helper->decodeContext($oac);
 
         if (isset($context['index'])) {
           $filters = !empty($context['search']) ? $context['search'] : [];
