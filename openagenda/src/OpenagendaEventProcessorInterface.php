@@ -2,12 +2,28 @@
 
 namespace Drupal\openagenda;
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Interface for OpenagendaAgendaProcessor.
  *
  * Prepares an agenda's data prior to display.
  */
 interface OpenagendaEventProcessorInterface {
+
+  /**
+   * Build an event's render array.
+   *
+   * @param array $event
+   *   The event to render.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity the event relates to (agenda).
+   *
+   * @return array
+   *   An agenda's render array or a simple markup to report
+   *   that no agenda was found.
+   */
+  public function buildRenderArray(array $event, EntityInterface $entity);
 
   /**
    * Process relative timing to event.

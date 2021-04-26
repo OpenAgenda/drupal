@@ -53,7 +53,7 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
   }
 
   /**
-   * Encode event oac (context) request parameter.
+   * Encode the context request parameter.
    *
    * @param int $index
    *   Position of event in current search.
@@ -63,9 +63,9 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    *   Array of search parameters.
    *
    * @return string
-   *   Encoded request parameter.
+   *   Encoded context.
    */
-  public function encodeOac(int $index, int $total, array $search) {
+  public function encodeContext(int $index, int $total, array $search) {
     $context = [
       'index' => $index,
       'total' => $total,
@@ -79,16 +79,16 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
   }
 
   /**
-   * Decode event oac (context) request parameter.
+   * Decode the context request parameter.
    *
-   * @param string $oac
-   *   The oac parameter to decode.
+   * @param string $serialized_context
+   *   The context parameter to decode.
    *
    * @return array
-   *   Decoded context from oac.
+   *   Decoded context.
    */
-  public function decodeOac(string $oac) {
-    return $this->json->decode(base64_decode($oac));
+  public function decodeContext(string $serialized_context) {
+    return $this->json->decode(base64_decode($serialized_context));
   }
 
   /**

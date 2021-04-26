@@ -135,7 +135,7 @@ function openagenda_theme($existing, $type, $theme, $path) {
       'variables' => [
         'entity' => NULL,
         'event' => [],
-        'oac' => '',
+        'context' => [],
         'lang' => 'fr',
       ],
     ],
@@ -244,13 +244,13 @@ function openagenda_preprocess_openagenda_agenda(&$variables) {
 
     foreach ($variables['events'] as $key => &$event) {
       // We use the event's key in the array as index.
-      $oac = $helper->encodeOac($key, $variables['total'], $variables['filters']);
+      $serialized_context = $helper->encodeContext($key, $variables['total'], $variables['filters']);
 
       // Localize event according to the language set in the node.
       $helper->localizeEvent($event, $node->get('field_openagenda')->language);
 
       // Set event local link.
-      $event['local_url'] = $helper->createEventUrl($node, $event['slug'], $oac)->toString();
+      $event['local_url'] = $helper->createEventUrl($node, $event['slug'], $serialized_context)->toString();
 
       $event['content'] = [
         '#theme' => 'openagenda_event_list',
@@ -282,8 +282,7 @@ function openagenda_preprocess_openagenda_event_list(&$variables) {
 function openagenda_preprocess_openagenda_event_single(&$variables) {
   $helper = \Drupal::service('openagenda.helper');
   $event = $variables['event'];
-
-  $context = !empty($variables['oac']) ? $helper->decodeOac($variables['oac']) : [];
+  $context = $variables['context'];
   $filters = !empty($context['search']) ? $context['search'] : [];
 
   // Make sure our index and total values make sense.
@@ -308,17 +307,17 @@ function openagenda_preprocess_openagenda_event_single(&$variables) {
 
     // Add a link if we found a previous event with those search parameters.
     if (!empty($event['previousEventSlug'])) {
-      $previousOac = $helper->encodeOac($context['index'] - 1, $context['total'], $filters);
+      $previous_event_context = $helper->encodeContext($context['index'] - 1, $context['total'], $filters);
       $variables['previous_event_url'] = $helper
-        ->createEventUrl($node, $event['previousEventSlug'], $previousOac)
+        ->createEventUrl($node, $event['previousEventSlug'], $previous_event_context)
         ->toString();
     }
 
     // Add a link if we found a next event with those search parameters.
     if (!empty($event['nextEventSlug'])) {
-      $nextOac = $helper->encodeOac($context['index'] + 1, $context['total'], $filters);
+      $next_event_context = $helper->encodeContext($context['index'] + 1, $context['total'], $filters);
       $variables['next_event_url'] = $helper
-        ->createEventUrl($node, $event['nextEventSlug'], $nextOac)
+        ->createEventUrl($node, $event['nextEventSlug'], $next_event_context)
         ->toString();
     }
 

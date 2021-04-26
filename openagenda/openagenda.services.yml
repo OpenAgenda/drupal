@@ -16,7 +16,7 @@ services:
 
   openagenda.event_processor:
     class: Drupal\openagenda\OpenagendaEventProcessor
-    arguments: ['@date.formatter']
+    arguments: ['@date.formatter', '@openagenda.helper']
 
   openagenda.event_converter:
     class: Drupal\openagenda\ParamConverter\OpenagendaEventConverter

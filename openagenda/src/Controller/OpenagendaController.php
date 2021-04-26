@@ -85,31 +85,9 @@ class OpenagendaController extends ControllerBase {
     }
 
     $oac = $request->get('oac');
+    $context = !empty($oac) ? $this->helper->decodeContext($oac) : [];
 
-    // Localize the event.
-    $lang = $node->get('field_openagenda')->language;
-    $this->helper->localizeEvent($event, $lang);
-
-    return [
-      '#title' => $event['title'],
-      '#theme' => 'openagenda_event_single',
-      '#entity' => $node,
-      '#event' => $event,
-      '#oac' => $oac,
-      '#lang' => $this->helper->getPreferredLanguage($node->get('field_openagenda')->language),
-      '#attached' => [
-        'html_head' => $this->eventProcessor->processEventMetadata($event),
-        'library' => [
-          'openagenda/openagenda.event',
-        ],
-        'drupalSettings' => [
-          'openagenda' => [
-            'isEvent' => TRUE,
-            'nid' => $node->id(),
-          ],
-        ],
-      ],
-    ];
+    return $this->eventProcessor->buildRenderArray($event, $node, $context);
   }
 
   /**

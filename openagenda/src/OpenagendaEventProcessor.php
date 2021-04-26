@@ -2,6 +2,7 @@
 
 namespace Drupal\openagenda;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -21,10 +22,65 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
   protected $dateFormatter;
 
   /**
+   * The OpenAgenda helper service.
+   *
+   * @var \Drupal\openagenda\OpenagendaHelperInterface
+   */
+  protected $helper;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(DateFormatterInterface $date_formatter) {
+  public function __construct(DateFormatterInterface $date_formatter, OpenagendaHelperInterface $helper) {
     $this->dateFormatter = $date_formatter;
+    $this->helper = $helper;
+  }
+
+  /**
+   * Build an event's render array.
+   *
+   * @param array $event
+   *   The event to render.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity the event relates to (agenda).
+   * @param array $context
+   *   Context for event navigation.
+   *
+   * @return array
+   *   An agenda's render array or a simple markup to report
+   *   that no agenda was found.
+   */
+  public function buildRenderArray(array $event, EntityInterface $entity, array $context = []) {
+    $build = [];
+
+    if ($entity->hasField('field_openagenda')) {
+      // Localize the event.
+      $lang = $entity->get('field_openagenda')->language;
+      $this->helper->localizeEvent($event, $lang);
+
+      $build = [
+        '#title' => $event['title'],
+        '#theme' => 'openagenda_event_single',
+        '#entity' => $entity,
+        '#event' => $event,
+        '#context' => $context,
+        '#lang' => $this->helper->getPreferredLanguage($entity->get('field_openagenda')->language),
+        '#attached' => [
+          'html_head' => $this->processEventMetadata($event),
+          'library' => [
+            'openagenda/openagenda.event',
+          ],
+          'drupalSettings' => [
+            'openagenda' => [
+              'isEvent' => TRUE,
+              'nid' => $entity->id(),
+            ],
+          ],
+        ],
+      ];
+    }
+
+    return $build;
   }
 
   /**
