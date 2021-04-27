@@ -23,7 +23,9 @@
 	<div class="oa-event-wrapper">
 		<header class="oa-event-header">
 			<p class="oa-entry-description">{{ event.description }}</p>
+			{% if event.image %}
 			<div class="oa-event-thumbnail"><img src="{{ event.image }}" alt="{{ event.title }}" /></div>
+			{% endif %}
 		</header>
 		<div class="oa-event-details">{{ event.html }}</div>
 	</div>
