@@ -84,7 +84,7 @@ class OpenagendaForm extends ConfigFormBase {
     $form['default_openagenda_settings']['include_embedded'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Included embedded content'),
-      '#description' => $this->t('Included embedded HTML content in event descriptions. Warning: this is a security risk.'),
+      '#description' => $this->t('Include embedded HTML content in event descriptions. Warning: this is a security risk.'),
       '#return_value' => TRUE,
       '#default_value' => $config->get('openagenda.include_embedded'),
     ];

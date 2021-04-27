@@ -101,7 +101,7 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
     $element['include_embedded'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Included embedded content'),
-      '#description' => $this->t('Included embedded HTML content in event descriptions. Warning: this is a security risk. Defaults to the main module configuration.'),
+      '#description' => $this->t('Include embedded HTML content in event descriptions. Warning: this is a security risk. Defaults to the main module configuration.'),
       '#return_value' => TRUE,
       '#default_value' => isset($items[$delta]->include_embedded) ? $items[$delta]->include_embedded : $this->config->get('openagenda.include_embedded'),
     ];
