@@ -1,5 +1,5 @@
 openagenda:
-  public_key: 'd6c622a7356b472698b9beb71b4ed296'
+  public_key: ''
   events_per_page: 20
   default_language: 'default'
   include_embedded: FALSE
