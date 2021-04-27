@@ -16,10 +16,12 @@
       </div>
     </header>
     <p class="oa-event-short-description">{{ event.description }}</p>
+    {% if event.image %}
     <div class="oa-event-thumbnail">
       <a class="oa-event-permalink" href="{{ event.local_url }}">
         <img src="{{ event.image }}" alt="{{ event.title }}" />
       </a>
     </div>
+    {% endif %}
   </div>
 </article>
