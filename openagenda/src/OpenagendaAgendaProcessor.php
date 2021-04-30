@@ -5,6 +5,7 @@ namespace Drupal\openagenda;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Prepares an agenda's data prior to display.
  */
 class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
+  use StringTranslationTrait;
 
   /**
    * OpenAgenda connector service.
