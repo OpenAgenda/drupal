@@ -86,14 +86,14 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
     $form['map_tiles_url'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Map tiles URL'),
-      '#description' => $this->t('URL of the map tiles to use for this widget. Defaults to the main module configuration.'),
+      '#description' => $this->t('URL of the map tiles to use for this widget.'),
       '#default_value' => isset($config['map_tiles_url']) ? $config['map_tiles_url'] : $this->moduleConfig->get('openagenda.default_map_filter_tiles_uri'),
     ];
 
     $form['map_tiles_attribution'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Map tiles attribution'),
-      '#description' => $this->t('Attribution of the map tiles to use for this widget. Defaults to the main module configuration.'),
+      '#description' => $this->t('Map tiles attribution to display on the map.'),
       '#default_value' => isset($config['map_tiles_attribution']) ? $config['map_tiles_attribution'] : $this->moduleConfig->get('openagenda.default_map_filter_tiles_attribution'),
     ];
 

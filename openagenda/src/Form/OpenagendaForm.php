@@ -51,14 +51,14 @@ class OpenagendaForm extends ConfigFormBase {
 
     $form['public_key'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('OpenAgenda account public key'),
-      '#description' => $this->t('Enter your OpenAgenda public key.'),
+      '#title' => $this->t('OpenAgenda public key'),
+      '#description' => $this->t("Enter your OpenAgenda's account public key."),
       '#default_value' => $config->get('openagenda.public_key'),
     ];
 
     $form['default_openagenda_settings'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Default OpenAgenda settings'),
+      '#title' => $this->t('Default OpenAgenda content settings'),
     ];
 
     $form['default_openagenda_settings']['events_per_page'] = [
@@ -71,7 +71,7 @@ class OpenagendaForm extends ConfigFormBase {
       '#default_value' => $config->get('openagenda.events_per_page'),
     ];
 
-    $language_options = ['default' => $this->t('Use site language')] + $this->helper->getAvailableLanguages();
+    $language_options = ['default' => $this->t("Use site's language")] + $this->helper->getAvailableLanguages();
 
     $form['default_openagenda_settings']['default_language'] = [
       '#type' => 'select',
@@ -97,7 +97,7 @@ class OpenagendaForm extends ConfigFormBase {
     $form['default_map_filter_settings']['default_map_filter_tiles_uri'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default map tiles URL'),
-      '#description' => $this->t('Default URL to the map tiles used for the filter.'),
+      '#description' => $this->t('Default URL of the map tiles used for the filter.'),
       '#default_value' => $config->get('openagenda.default_map_filter_tiles_uri'),
     ];
 
@@ -116,7 +116,7 @@ class OpenagendaForm extends ConfigFormBase {
     $form['default_search_filter_settings']['default_search_filter_placeholder'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default search filter placeholder'),
-      '#description' => $this->t('Text to use for the search filter input field placeholder.'),
+      '#description' => $this->t('Text to use as the search filter input field placeholder.'),
       '#default_value' => $config->get('openagenda.default_search_filter_placeholder'),
     ];
 
