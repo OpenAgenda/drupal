@@ -52,7 +52,7 @@ class OpenagendaForm extends ConfigFormBase {
     $form['public_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('OpenAgenda public key'),
-      '#description' => $this->t('Enter your OpenAgenda public key.'),
+      '#description' => $this->t("Enter your OpenAgenda's account public key."),
       '#default_value' => $config->get('openagenda.public_key'),
     ];
 
