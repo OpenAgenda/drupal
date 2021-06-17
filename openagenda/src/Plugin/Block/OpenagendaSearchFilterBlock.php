@@ -86,7 +86,7 @@ class OpenagendaSearchFilterBlock extends BlockBase implements ContainerFactoryP
     $form['input_placeholder'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Placeholder'),
-      '#description' => $this->t('Placeholder for the input field. Defaults to the main module configuration.'),
+      '#description' => $this->t('Placeholder for the input field.'),
       '#default_value' => isset($config['input_placeholder']) ? $config['input_placeholder'] : $this->moduleConfig->get('openagenda.default_search_filter_placeholder'),
     ];
 

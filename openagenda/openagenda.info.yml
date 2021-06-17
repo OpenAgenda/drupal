@@ -1,5 +1,5 @@
 name: OpenAgenda
-description: 'Integrates OpenAgenda views.'
+description: 'Integrates OpenAgenda.'
 package: OpenAgenda
 
 type: module

@@ -71,7 +71,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
 
       if (isset($data['success']) && $data['success'] == FALSE) {
         $build = [
-          '#markup' => $this->t("This agenda doesn't exist."),
+          '#markup' => $this->t("This OpenAgenda doesn't exist."),
         ];
       }
       else {
