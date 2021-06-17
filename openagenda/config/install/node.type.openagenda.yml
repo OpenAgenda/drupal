@@ -5,7 +5,7 @@ dependencies:
     - openagenda
 name: 'OpenAgenda'
 type: openagenda
-description: 'Displays an agenda from OpenAgenda.'
-help: 'Displays an agenda from OpenAgenda.'
+description: 'Displays an OpenAgenda.'
+help: 'Displays an OpenAgenda.'
 new_revision: false
 preview_mode: 1

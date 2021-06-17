@@ -72,7 +72,7 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
     $element['uid'] = [
       '#type' => 'textfield',
       '#title' => $this->t('OpenAgenda UID'),
-      '#description' => $this->t('OpenAgenda UID of the agenda you want to display.'),
+      '#description' => $this->t('UID of the OpenAgenda you want to display.'),
       '#default_value' => isset($items[$delta]->uid) ? $items[$delta]->uid : '',
       '#size' => 10,
       '#maxlength' => 10,
@@ -88,12 +88,12 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
       '#max' => 300,
     ];
 
-    $language_options = ['default' => $this->t('Use site language')] + $this->helper->getAvailableLanguages();
+    $language_options = ['default' => $this->t("Use site's language")] + $this->helper->getAvailableLanguages();
 
     $element['language'] = [
       '#type' => 'select',
       '#title' => $this->t('Language'),
-      '#description' => $this->t('The language to use for this agenda.'),
+      '#description' => $this->t('The language to use for this OpenAgenda.'),
       '#options' => $language_options,
       '#default_value' => isset($items[$delta]->language) ? $items[$delta]->language : $this->config->get('openagenda.default_language'),
     ];
@@ -101,7 +101,7 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
     $element['include_embedded'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Included embedded content'),
-      '#description' => $this->t('Include embedded HTML content in event descriptions. Warning: this is a security risk. Defaults to the main module configuration.'),
+      '#description' => $this->t('Include embedded HTML content in event descriptions. Warning: this is a security risk.'),
       '#return_value' => TRUE,
       '#default_value' => isset($items[$delta]->include_embedded) ? $items[$delta]->include_embedded : $this->config->get('openagenda.include_embedded'),
     ];
