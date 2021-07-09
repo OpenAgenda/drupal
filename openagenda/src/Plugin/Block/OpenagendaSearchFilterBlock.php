@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Block(
  *   id = "openagenda_search_filter_block",
  *   admin_label = @Translation("OpenAgenda search filter"),
- *   category = @Translation("OpenAgenda filters"),
+ *   category = @Translation("OpenAgenda"),
  *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   },

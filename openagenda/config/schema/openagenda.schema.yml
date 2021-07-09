@@ -16,7 +16,7 @@ openagenda.settings:
           label: 'Default language'
         include_embedded:
           type: boolean
-          label: 'Included embedded content'
+          label: 'Include embedded content'
         default_map_filter_tiles_uri:
           type: string
           label: 'Default map tiles URL'
