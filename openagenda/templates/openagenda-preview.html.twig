@@ -1,0 +1,17 @@
+<ul class="oa-preview">
+  {% for event in events %}
+    <li{{ loop.first ? ' class="first"' }} >
+      <a class="oa-preview-event-permalink" href="{{ event.local_url }}">{{ event.title }}</a>
+      <p class="oa-preview-event-range">
+        {{ event.range }}
+      </p>
+      {% if event.thumbnail %}
+      <a class="oa-preview-event-permalink" href="{{ event.local_url }}">
+        <img src="{{ event.thumbnail }}" alt="{{ event.title }}" />
+      </a>
+      {% endif %}
+      <p class="oa-preview-event-short-description">{{ event.description }}</p>
+    </li>        
+  {% endfor %}    
+</ul>
+{{ attach_library('openagenda/openagenda.preview') }}

@@ -26,4 +26,4 @@ services:
 
   openagenda.helper:
     class: Drupal\openagenda\OpenagendaHelper
-    arguments: ['@serialization.json', '@language_manager', '@current_user']    
+    arguments: ['@serialization.json', '@language_manager', '@current_user', '@entity_type.manager']    
