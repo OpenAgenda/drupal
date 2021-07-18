@@ -34,6 +34,11 @@ openagenda.timetable:
   dependencies:
     - core/jquery
 
+openagenda.preview:
+  css:
+    component:
+      css/preview.css: {}
+
 openagenda.activetags:
   css:
     component:

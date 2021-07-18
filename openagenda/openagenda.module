@@ -225,6 +225,17 @@ function openagenda_theme($existing, $type, $theme, $path) {
         'filters' => '',
       ],
     ],
+    // Preview block.
+    'openagenda_preview' => [
+      'render element' => 'children',
+      'template' => 'openagenda-preview',
+      'path' => $path . '/templates',
+      'variables' => [
+        'entity' => NULL,
+        'events' => [],
+        'lang' => 'fr',
+      ],
+    ],
   ];
 }
 
@@ -354,5 +365,25 @@ function openagenda_preprocess_openagenda_export_links(&$variables) {
   if (!empty($node = $variables['entity']) && $node->hasField('field_openagenda')) {
     $variables['agenda_uid'] = $node->get('field_openagenda')->uid;
     $variables['search_string'] = !empty($variables['filters']) ? http_build_query(['oaq' => $variables['filters']]) : '';
+  }
+}
+
+/**
+ * Preprocess function for preview template.
+ *
+ * Translate events and compute their links.
+ */
+function openagenda_preprocess_openagenda_preview(&$variables) {
+  $helper = Drupal::service('openagenda.helper');
+
+  // Make sure we have an OpenAgenda node.
+  if (!empty($node = $variables['entity']) && $node->hasField('field_openagenda')) {
+    foreach ($variables['events'] as $key => &$event) {
+      // Localize event.
+      $helper->localizeEvent($event, $variables['lang']);
+
+      // Set event local link.
+      $event['local_url'] = $helper->createEventUrl($node, $event['slug'], '')->toString();
+    }
   }
 }
