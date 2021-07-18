@@ -7,6 +7,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Component\Utility\Html;
 
 /**
  * Class OpenagendaHelper.
@@ -44,12 +46,20 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
   protected $currentUser;
 
   /**
+   * Entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(SerializationInterface $json, LanguageManagerInterface $language_manager, AccountInterface $current_user) {
+  public function __construct(SerializationInterface $json, LanguageManagerInterface $language_manager, AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager) {
     $this->json = $json;
     $this->languageManager = $language_manager;
     $this->currentUser = $current_user;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -254,6 +264,33 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
       'es' => 'Español',
       'it' => 'Italiano',
     ];
+  }
+
+  /**
+   * Get a list of nodes with an OpenAgenda selected.
+   *
+   * @return array
+   *   List of node titles keyed by their id.
+   */
+  public function getOpenagendaNodes() {
+    $nodes = [];
+
+    $query = $this->entityTypeManager->getStorage('node')->getQuery();
+    $query->exists('field_openagenda.uid');
+    $query->accessCheck(TRUE);
+    $query->addTag('node_access');
+
+    $result = $query->execute();
+
+    if (!empty($result)) {
+      $entities = $this->entityTypeManager->getStorage('node')->loadMultiple($result);
+
+      foreach ($entities as $entity_id => $entity) {
+        $nodes[$entity_id] = Html::escape($entity->label());
+      }
+    }
+
+    return $nodes;
   }
 
 }
