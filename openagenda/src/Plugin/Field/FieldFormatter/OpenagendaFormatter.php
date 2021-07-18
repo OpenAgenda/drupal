@@ -34,7 +34,7 @@ class OpenagendaFormatter extends FormatterBase implements ContainerFactoryPlugi
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = $this->t('Displays the agenda.');
+    $summary[] = $this->t('Displays the OpenAgenda.');
     return $summary;
   }
 

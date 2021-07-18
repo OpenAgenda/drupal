@@ -52,7 +52,7 @@ class OpenagendaForm extends ConfigFormBase {
     $form['public_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('OpenAgenda public key'),
-      '#description' => $this->t("Enter your OpenAgenda's account public key."),
+      '#description' => $this->t('Enter your OpenAgenda account public key.'),
       '#default_value' => $config->get('openagenda.public_key'),
     ];
 
@@ -64,7 +64,7 @@ class OpenagendaForm extends ConfigFormBase {
     $form['default_openagenda_settings']['events_per_page'] = [
       '#type' => 'number',
       '#title' => $this->t('Events per page'),
-      '#description' => $this->t('The number of events to show per page. Enter 0 for unlimited.'),
+      '#description' => $this->t('Number of events displayed per page. Enter 0 to show all events.'),
       '#min' => 0,
       '#max' => 300,
       '#size' => 3,
@@ -76,14 +76,14 @@ class OpenagendaForm extends ConfigFormBase {
     $form['default_openagenda_settings']['default_language'] = [
       '#type' => 'select',
       '#title' => $this->t('Default language'),
-      '#description' => $this->t('The default language to use for agenda and events.'),
+      '#description' => $this->t('The default language to use for OpenAgendas and events.'),
       '#options' => $language_options,
       '#default_value' => $config->get('openagenda.default_language'),
     ];
 
     $form['default_openagenda_settings']['include_embedded'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Included embedded content'),
+      '#title' => $this->t('Include embedded content'),
       '#description' => $this->t('Include embedded HTML content in event descriptions. Warning: this is a security risk.'),
       '#return_value' => TRUE,
       '#default_value' => $config->get('openagenda.include_embedded'),

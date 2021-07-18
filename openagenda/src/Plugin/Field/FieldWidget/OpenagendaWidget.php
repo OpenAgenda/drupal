@@ -81,7 +81,7 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
     $element['events_per_page'] = [
       '#type' => 'number',
       '#title' => $this->t('Events per page'),
-      '#description' => $this->t('Number of events displayed per page. Leave at 0 to show all events.'),
+      '#description' => $this->t('Number of events displayed per page. Enter 0 to show all events.'),
       '#default_value' => isset($items[$delta]->events_per_page) ? $items[$delta]->events_per_page : $this->config->get('openagenda.events_per_page'),
       '#size' => 3,
       '#min' => 0,
@@ -100,7 +100,7 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
 
     $element['include_embedded'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Included embedded content'),
+      '#title' => $this->t('Include embedded content'),
       '#description' => $this->t('Include embedded HTML content in event descriptions. Warning: this is a security risk.'),
       '#return_value' => TRUE,
       '#default_value' => isset($items[$delta]->include_embedded) ? $items[$delta]->include_embedded : $this->config->get('openagenda.include_embedded'),
