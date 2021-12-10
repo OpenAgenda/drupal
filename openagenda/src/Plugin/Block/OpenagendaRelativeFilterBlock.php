@@ -11,18 +11,18 @@ use Drupal\openagenda\OpenagendaHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides the OpenAgenda active tags summary Block.
+ * Provides the OpenAgenda relative filter Block.
  *
  * @Block(
- *   id = "openagenda_active_tags_block",
- *   admin_label = @Translation("OpenAgenda active tags"),
+ *   id = "openagenda_relative_filter_block",
+ *   admin_label = @Translation("OpenAgenda - Relative date filter"),
  *   category = @Translation("OpenAgenda"),
  *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   },
  * )
  */
-class OpenagendaActiveTagsBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class OpenagendaRelativeFilterBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The OpenAgenda helper service.
@@ -77,13 +77,8 @@ class OpenagendaActiveTagsBlock extends BlockBase implements ContainerFactoryPlu
     // Check that we have an OpenAgenda node and that we are hitting the base
     // route (not an event).
     if ($node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
-      $lang = $this->helper->getPreferredLanguage($node->get('field_openagenda')->language);
-      $agenda_uid = $node->get('field_openagenda')->uid;
-
       $block = [
-        '#theme' => 'openagenda_active_tags',
-        '#agenda_uid' => $agenda_uid,
-        '#lang' => $lang,
+        '#theme' => 'openagenda_relative_filter',
       ];
     }
 

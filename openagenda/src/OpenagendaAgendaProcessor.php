@@ -2,10 +2,13 @@
 
 namespace Drupal\openagenda;
 
+use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -13,7 +16,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * Prepares an agenda's data prior to display.
  */
-class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
+class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
+{
   use StringTranslationTrait;
 
   /**
@@ -21,7 +25,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
    *
    * @var \Drupal\openagenda\OpenagendaConnectorInterface
    */
-  protected $connector;
+  public $connector;
 
   /**
    * The OpenAgenda helper service.
@@ -52,9 +56,18 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
   protected $pagerParameters;
 
   /**
+   * OpenAgenda module configuration object.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected $config;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(OpenagendaConnectorInterface $connector, OpenagendaHelperInterface $helper, RequestStack $request_stack, PagerManagerInterface $pager_manager, PagerParametersInterface $pager_parameters) {
+  public function __construct(OpenagendaConnectorInterface $connector, OpenagendaHelperInterface $helper, RequestStack $request_stack, PagerManagerInterface $pager_manager, PagerParametersInterface $pager_parameters)
+  {
+    $this->config = \Drupal::config('openagenda.settings');
     $this->connector = $connector;
     $this->helper = $helper;
     $this->requestStack = $request_stack;
@@ -72,50 +85,77 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
    *   An agenda's render array or a simple markup to report
    *   that no agenda was found.
    */
-  public function buildRenderArray(EntityInterface $entity) {
-    $build = [];
+  public function buildRenderArray(EntityInterface $entity)
+  {
+    if (!$entity->hasField('field_openagenda')) {
+      return [];
+    }
+    // Get request parameters : page.
+    $size = (int) $entity->get('field_openagenda')->events_per_page;
+    $from = $this->pagerParameters->findPage() * $size;
 
-    if ($entity->hasField('field_openagenda')) {
-      $agenda_uid = $entity->get('field_openagenda')->uid;
-      $events_per_page = $entity->get('field_openagenda')->events_per_page;
-      // Get request parameters : page.
-      $offset = $this->pagerParameters->findPage() * $events_per_page;
-      // Get request parameters : filters.
-      $oaq = $this->requestStack->getCurrentRequest()->get('oaq');
-      // If no oaq parameter in request, set filters to an empty array.
-      $filters = !empty($oaq) ? $oaq : [];
+    // Get request filters.
+    $queryInfo = UrlHelper::parse($this->requestStack->getCurrentRequest()->getUri());
+    $filters = $queryInfo['query'];
 
-      $data = $this->connector->getAgenda($agenda_uid, $filters, $offset, $events_per_page);
+    // Remove pager params.
+    unset($filters['page']);
 
-      if (isset($data['success']) && $data['success'] == FALSE) {
-        $build = [
-          '#markup' => $this->t("This OpenAgenda doesn't exist."),
-        ];
-      }
-      else {
-        $build = [
-          '#theme' => 'openagenda_agenda',
-          '#entity' => $entity,
-          '#events' => !empty($data['events']) ? $data['events'] : [],
-          '#total' => !empty($data['total']) ? $data['total'] : 0,
-          '#filters' => !empty($data['filters']) ? $data['filters'] : [],
-          '#lang' => $this->helper->getPreferredLanguage($entity->get('field_openagenda')->language),
-          '#attached' => [
-            'library' => [
-              'openagenda/openagenda.agenda',
-              'openagenda/openagenda.pager',
-            ],
-            'drupalSettings' => [
-              'openagenda' => ['nid' => $entity->id()],
-            ],
+    // Get events.
+    $agenda_uid = $entity->get('field_openagenda')->uid;
+    $filters += ['detailed' => 1];
+    $data = $this->connector->getAgendaEvents($agenda_uid, $filters, $from, $size);
+
+    // Success ?
+    if (isset($data['success']) && $data['success'] == FALSE) {
+      return [
+        '#markup' => $this->t("This OpenAgenda doesn't exist."),
+      ];
+    }
+
+    // Localize events.
+    $events = $data['events'];
+    $lang = $entity->get('field_openagenda')->language;
+    foreach ($events as $key => &$event) {
+      $this->helper->localizeEvent($event, $lang);
+    }
+
+    // Build render array.
+    $language = $this->helper->getPreferredLanguage($entity->get('field_openagenda')->language);
+    $nid = $entity->id();
+    $build = [
+      '#theme' => 'openagenda_agenda',
+      '#entity' => $entity,
+      '#events' => !empty($data['events']) ? $data['events'] : [],
+      '#total' => !empty($data['total']) ? $data['total'] : 0,
+      '#from' => $from,
+      '#lang' => $language,
+      '#columns' => $this->config->get('openagenda.default_columns', 3),
+      '#filters' => $filters,
+      '#attached' => [
+        'library' => [
+          'openagenda/openagenda.pager',
+        ],
+        'drupalSettings' => [
+          'openagenda' => [
+            'nid' => $nid,
+            'lang' => $language,
+            'ajaxUrl' => base_path() . Url::fromRoute('openagenda.ajax', ['node' => $nid])->getInternalPath(),
+            'filtersUrl' => base_path() . Url::fromRoute('openagenda.filters', ['node' => $nid])->getInternalPath(),
           ],
-        ];
+        ]
+      ],
+    ];
 
-        if (!empty($data['total'])) {
-          $this->pagerManager->createPager($data['total'], $events_per_page);
-          $build['#pager'] = ['#type' => 'pager'];
-        }
-      }
+    // Defaut style library ?
+    if ($default_style = $this->config->get('openagenda.default_style')) {
+      $build['#attached']['library'][] = 'openagenda/openagenda.' . $default_style;
+    }
+
+    // Add pager if needed.
+    if (!empty($data['total'])) {
+      $this->pagerManager->createPager($data['total'], $size);
+      $build['#pager'] = ['#type' => 'pager'];
     }
 
     return $build;

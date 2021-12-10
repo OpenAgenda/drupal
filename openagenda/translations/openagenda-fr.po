@@ -1,0 +1,232 @@
+
+msgid "in @time"
+msgstr "dans @time"
+
+msgid "@time ago"
+msgstr "Il y a @time"
+
+msgid "In @time"
+msgstr "Dans @time"
+
+msgid "Back to agenda"
+msgstr "Retour à l'agenda"
+
+msgid "Previous"
+msgstr "Précédent"
+
+msgid "Next"
+msgstr "Suivant"
+
+msgid "Monday"
+msgstr "Lundi"
+
+msgid "Tuesday"
+msgstr "Mardi"
+
+msgid "Wednesday"
+msgstr "Mercredi"
+
+msgid "Thursday"
+msgstr "Jeudi"
+
+msgid "Friday"
+msgstr "Vendredi"
+
+msgid "Saturday"
+msgstr "Samedi"
+
+msgid "Sunday"
+msgstr "Dimanche"
+
+msgid "January"
+msgstr "Janvier"
+
+msgid "February"
+msgstr "Février"
+
+msgid "March"
+msgstr "Mars"
+
+msgid "April"
+msgstr "Avril"
+
+msgid "May"
+msgstr "Mai"
+
+msgid "June"
+msgstr "Juin"
+
+msgid "July"
+msgstr "Juillet"
+
+msgid "August"
+msgstr "Août"
+
+msgid "September"
+msgstr "Septembre"
+
+msgid "October"
+msgstr "Octobre"
+
+msgid "November"
+msgstr "Novembre"
+
+msgid "December"
+msgstr "Décembre"
+
+msgid "OpenAgenda public key"
+msgstr "Clé publique OpenAgenda"
+
+msgid "Enter your OpenAgenda account public key."
+msgstr "Entrez la clé publique de votre compte OpenAgenda."
+
+msgid "Default OpenAgenda content settings"
+msgstr "Réglage par défault du contenu OpenAgenda"
+
+msgid "Default OpenAgenda display settings"
+msgstr "Réglage par défault de l'affichage OpenAgenda"
+
+msgid "Default map filter settings"
+msgstr "Réglage par défault du filtre carte"
+
+msgid "Default search filter settings"
+msgstr "Réglage par défault du filtre de recherche texte"
+
+msgid "Events per page"
+msgstr "Événements par page"
+
+msgid "Number of events displayed per page. Enter 0 to show all events."
+msgstr "Nombre d'événements par page. 0 pour afficher tous les événements."
+
+msgid "Default language"
+msgstr "Language par défaut"
+
+msgid "The default language to use for OpenAgendas and events."
+msgstr "Le language à utiliser par défault."
+
+msgid "Include embedded content"
+msgstr "Inclure le contenu intégré (PDF, vidéo, visionneuse, ...)"
+
+msgid ""
+"Include embedded HTML content in event descriptions. Warning: this is a "
+"security risk."
+msgstr ""
+"Inclure le contenu intégré dans la description longue des événements. "
+"Attention: risque de sécurité."
+
+msgid "OpenAgenda default style"
+msgstr "Style par défaut"
+
+msgid "None"
+msgstr "Aucun"
+
+msgid "Events per column"
+msgstr "Événement(s) par colonne"
+
+msgid "Default map tiles URL"
+msgstr "URL par défaut des tuiles"
+
+msgid "Default URL of the map tiles used for the filter."
+msgstr "URL par défaut des tuiles à utiliser pour le filtre carte."
+
+msgid "URL of the map tiles to use for this widget."
+msgstr "URL par défaut des tuiles à utiliser pour le filtre carte."
+
+msgid "Default map tiles attribution"
+msgstr "Attribution des tuiles par défaut"
+
+msgid "Default map tiles attribution to display on filter."
+msgstr "Attribution des tuiles par défaut à afficher pour le filtre carte."
+
+msgid "Default search filter placeholder"
+msgstr "Placeholder par défaut du filtre de recherche"
+
+msgid "Text to use as the search filter input field placeholder."
+msgstr "Texte à utiliser par défaut pour le filtre de recherche."
+
+msgid "OpenAgenda configuration"
+msgstr "Configuration OpenAgenda"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "OpenAgenda UID"
+msgstr "UID OpenAgenda"
+
+msgid "UID of the OpenAgenda you want to display."
+msgstr "UID de l'agenda à afficher."
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "The language to use for this OpenAgenda."
+msgstr "La langue à utiliser pour cet OpenAgenda."
+
+msgid "Displays an OpenAgenda."
+msgstr "Affiche un agenda OpenAgenda."
+
+msgid "OpenAgenda - Active filters"
+msgstr "OpenAgenda - Filtres actifs"
+
+msgid "OpenAgenda - Cities filter"
+msgstr "OpenAgenda - Filtre villes"
+
+msgid "OpenAgenda - Daterange filter"
+msgstr "OpenAgenda - Filtre intervalle de date"
+
+msgid "OpenAgenda - Event map"
+msgstr "OpenAgenda - Carte OSM de l'événement"
+
+msgid "OpenAgenda - Event timetable"
+msgstr "OpenAgenda - Horaires de l'événement"
+
+msgid "OpenAgenda - OSM Map filter"
+msgstr "OpenAgenda - Filtre carte OSM"
+
+msgid "OpenAgenda - Preview block"
+msgstr "OpenAgenda - Bloc preview"
+
+msgid "OpenAgenda - Relative date filter"
+msgstr "OpenAgenda - Filtre dates relatives"
+
+msgid "OpenAgenda - Search filter"
+msgstr "OpenAgenda - Filtre de recherche"
+
+msgid "OpenAgenda - Total results block"
+msgstr "OpenAgenda - Bloc total des résultats"
+
+msgid "OpenAgenda node"
+msgstr "Noeud OpenAgenda"
+
+msgid "Number of events in preview"
+msgstr "Nombre d'événements"
+
+msgid "The number of events to show in the block. Enter 0 for unlimited"
+msgstr "Nombre d'événements à afficher dans le bloc. 0 pour tout afficher."
+
+msgid "Default order"
+msgstr "Ordre par défaut"
+
+msgid "Order"
+msgstr "Ordre"
+
+msgid "Enter filters"
+msgstr "Filtres"
+
+msgid "Paste the URL of this OpenAgenda with corresponding filters set."
+msgstr "Coller l'URL complet de l'OpenAgenda avec les filtres correspondants."
+
+msgid "Paste the URL of this OpenAgenda with corresponding filters set."
+msgstr "Coller l'URL complet de l'OpenAgenda avec les filtres correspondants."
+
+msgid "Placeholder for the input field."
+msgstr "Placeholder du champ de recherche."
+
+msgid "OpenAgenda settings"
+msgstr "Configuration OpenAgenda"
+
+msgid "Configure settings for the OpenAgenda module."
+msgstr "Configuration par défaut du module OpenAgenda."
+
+msgid "There are no events with these search parameters."
+msgstr "Il n'y a aucun résultat correspondant à vos filtres de recherche."

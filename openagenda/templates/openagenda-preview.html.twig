@@ -1,17 +1,30 @@
-<ul class="oa-preview">
-  {% for event in events %}
-    <li{{ loop.first ? ' class="first"' }} >
-      <a class="oa-preview-event-permalink" href="{{ event.local_url }}">{{ event.title }}</a>
-      <p class="oa-preview-event-range">
-        {{ event.range }}
-      </p>
-      {% if event.thumbnail %}
-      <a class="oa-preview-event-permalink" href="{{ event.local_url }}">
-        <img src="{{ event.thumbnail }}" alt="{{ event.title }}" />
-      </a>
-      {% endif %}
-      <p class="oa-preview-event-short-description">{{ event.description }}</p>
-    </li>        
-  {% endfor %}    
-</ul>
-{{ attach_library('openagenda/openagenda.preview') }}
+<div id="oa-wrapper" class="oa-agenda oa-agenda--preview">
+  <ul class="oa-list oa-list--x{{ columns }}">
+    {% for event in events %}
+      <li class="oa-list__item">
+        <div id="event--{{ event.uid }}" class="oa-event oa-event--list">
+          <div class="oa-event__wrapper">
+            <header class="oa-event__header">
+              <a href="{{ event.local_url }}"><div class="oa-event-thumbnail"{% if event.image %} style="background-image: url({{ event.image.base ~ event.image.filename }})"{% endif %}></div></a>
+              {% if event.location.city is not null and event.location.city != '' %}
+                <div class="oa-event-location">{{ event.location.city }}</div>
+              {% endif %}
+            </header>
+            <h2 class="oa-event-title"><a class="oa-event-permalink" href="{{ event.local_url }}">{{ event.title }}</a></h2>
+            <div class="oa-event__content">
+              {% if event.keywords is not null and event.keywords|length > 0 %}
+                <ul class="oa-event-keywords">
+                  {% for keyword in event.keywords %}
+                    <li class="oa-event-keyword"><a href="{{ path('entity.node.canonical', {'node':  entity.id, 'search' : keyword}) }}">#{{ keyword }}</a></li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+              <div class="oa-event-daterange">{{ event.dateRange }}</div>
+              <p class="oa-event-description oa-event-description--short">{{ event.description }}</p>
+            </div>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

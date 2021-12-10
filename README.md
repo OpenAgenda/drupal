@@ -6,14 +6,15 @@ INTRODUCTION
 
 This modules allows you to integrate agendas from [OpenAgenda](https://www.openagenda.com) on your Drupal site.
 
-
 REQUIREMENTS
 ------------
 
-Pick the branch corresponding to your Drupal installation:
-- `master` is compatible with Drupal 8.8+/9.
-- `8.3-8.7` is compatible with Drupal 8.3 to 8.7.
-- `8.0-8.2` is compatible with Drupal 8.0 to 8.2.
+OpenAgenda requires at least Drupal 8.0:
+- `8.x-3.x` versions are compatible with Drupal 8.8+/9.
+- `8.x-2.x` versions are compatible with Drupal 8.3 to 8.7.
+- `8.x-1.x` versions are compatible with Drupal 8.0 to 8.2.
+
+OpenAgenda requires openagenda/sdk-php >= 1.0.0.
 
 INSTALLATION
 ------------
@@ -37,51 +38,31 @@ Alternatively, you can re-use the OpenAgenda field and attach it to your own con
 
 FILTERS
 -------
-The module includes an implementation of 5 filter types - map, calendar, relative date, per tag and  
-search field.  
+
+The module includes an implementation of 5 filter types using react.js: text search, map, calendar, relative date and cities.  
 These filters can be added through the block interface (`Admin > Structure > Block Layout`) to any  
-of your theme's region.  
+of your theme's region. Agenda events are refreshed on filters on change event.
 The map filter (tiles type) and the search filter(input field placeholder) have custom configuration options  
 available in their block's settings.
 
-The active tags block displays the currently active filters.
-
-Alternatively, the filters can be integrated directly into the Twig template files of your agenda.  
-You can either directly use Twig includes :
-```
-{% include "openagenda-active-tags.html.twig" %}
-{% include "openagenda-search-filter.html.twig" with {'placeholder': 'Search'} %}
-```
-or add extra variables in a preprocess function, and print theme into your Twig file :
-```
-function mytheme_preprocess_openagenda_agenda(&$variables) {
-  $variables['active_tags'] = [
-    '#theme' => 'openagenda_active_tags',
-    '#agenda_uid' => $variables['agenda_uid'],
-    '#lang' => $variables['lang'],
-  ];
-
-  $variables['search_filter'] = [
-    '#theme' => 'openagenda_search_filter',
-    '#agenda_uid' => $variables['agenda_uid'],
-    '#placeholder' => 'Search',
-    '#lang' => $variables['lang'],
-  ];
-}
-```
+Additional agenda blocks are availables :
+- The active filters block displays the currently active filters.
+- The total results block displays the total of events for active filters.
 
 Check the `openagenda.module` file for the name of the theme hooks and the theming variables available.
 
 EVENT VIEW
 ----------
 
-To show the map when displaying an event, you can use the map filter block and check the `Show on events` option.  
+To show the map when displaying an event, you can use the event map block.
 An event timetable block is also available.
 
 You can also include those in the Twig files (see Filters above).
 
 THEMING
 -------
+
+Agenda is displayed using OpenAgenda style by default, adding a css. This can be disabled in OpenAgenda settings.
 
 Every display aspect of the module has a corresponding Twig template file sitting in the `templates` directory.  
 

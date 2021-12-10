@@ -1,27 +1,23 @@
-<article id="event-{{ event.origin.uid }}" class="oa-event oa-list-item">
-  <div class="oa-event-wrapper">
-    <header class="oa-event-header">
-      <h2 class="oa-event-title">
-        <a class="oa-event-permalink" href="{{ event.local_url }}">
-          {{ event.title }}
-        </a>
-      </h2>
-      <div class="oa-meta">
-        <p class="oa-event-timing">
-          {{ relative_timing }}
-        </p>
-        <p class="oa-event-range">
-          {{ event.range }}
-        </p>
-      </div>
+<article id="event--{{ event.uid }}" class="oa-event oa-event--list">
+  <div class="oa-event__wrapper">
+    <header class="oa-event__header">
+      <a href="{{ event.local_url }}"><div class="oa-event-thumbnail"{% if event.image %} style="background-image: url({{ event.image.base ~ event.image.filename }})"{% endif %}></div></a>
+      <div class="oa-event-timing">{{ relative_timing }}</div>
+      {% if event.location.city is not null and event.location.city != '' %}
+        <div class="oa-event-location">{{ event.location.city }}</div>
+      {% endif %}
     </header>
-    <p class="oa-event-short-description">{{ event.description }}</p>
-    {% if event.image %}
-    <div class="oa-event-thumbnail">
-      <a class="oa-event-permalink" href="{{ event.local_url }}">
-        <img src="{{ event.image }}" alt="{{ event.title }}" />
-      </a>
+    <h2 class="oa-event-title"><a class="oa-event-permalink" href="{{ event.local_url }}">{{ event.title }}</a></h2>
+    <div class="oa-event__content">
+      {% if event.keywords is not null and event.keywords|length > 0 %}
+        <ul class="oa-event-keywords">
+          {% for keyword in event.keywords %}
+            <li class="oa-event-keyword"><a href="{{ path('entity.node.canonical', {'node':  entity.id, 'search' : keyword}) }}">#{{ keyword }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <div class="oa-event-daterange">{{ event.dateRange }}</div>
+      <p class="oa-event-description oa-event-description--short">{{ event.description }}</p>
     </div>
-    {% endif %}
   </div>
 </article>

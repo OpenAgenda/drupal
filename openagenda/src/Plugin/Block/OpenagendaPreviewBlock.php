@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Block(
  *   id = "openagenda_preview_block",
- *   admin_label = @Translation("OpenAgenda preview block"),
+ *   admin_label = @Translation("OpenAgenda - Preview block"),
  *   category = @Translation("OpenAgenda"),
  * )
  */
@@ -46,10 +46,18 @@ class OpenagendaPreviewBlock extends BlockBase implements ContainerFactoryPlugin
   protected $entityTypeManager;
 
   /**
+   * OpenAgenda module configuration object.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected $config;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, OpenagendaHelperInterface $helper, OpenagendaConnectorInterface $connector, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->config = \Drupal::config('openagenda.settings');
     $this->helper = $helper;
     $this->connector = $connector;
     $this->entityTypeManager = $entity_type_manager;
@@ -120,7 +128,7 @@ class OpenagendaPreviewBlock extends BlockBase implements ContainerFactoryPlugin
     $form['custom_filter'] = [
       '#type' => 'textfield',
       '#maxlength' => 65536,
-      '#placeholder' => $this->t('Enter filter'),
+      '#placeholder' => $this->t('Enter filters'),
       '#states' => [
         'enabled' => [
           ':input[name="settings[order]"]' => ['value' => 'custom_filter'],
@@ -163,10 +171,10 @@ class OpenagendaPreviewBlock extends BlockBase implements ContainerFactoryPlugin
     $block = [];
 
     if (!empty($this->configuration['agenda_reference'])) {
-      $node = $this->entityTypeManager->getStorage('node')->load($this->configuration['agenda_reference']);
+      $entity = $this->entityTypeManager->getStorage('node')->load($this->configuration['agenda_reference']);
 
-      if ($node->hasField('field_openagenda')) {
-        $agenda_uid = $node->get('field_openagenda')->uid;
+      if ($entity->hasField('field_openagenda')) {
+        $agenda_uid = $entity->get('field_openagenda')->uid;
         $events_in_preview = $this->configuration['events_in_preview'];
 
         $filters = [];
@@ -178,12 +186,12 @@ class OpenagendaPreviewBlock extends BlockBase implements ContainerFactoryPlugin
         if ($this->configuration['order'] == 'custom_filter') {
           $parsed_url = UrlHelper::parse($this->configuration['custom_filter'], PHP_URL_QUERY);
 
-          if (!empty($parsed_url['query']) && !empty($parsed_url['query']['oaq'])) {
-            $filters = $parsed_url['query']['oaq'];
+          if (!empty($parsed_url['query'])) {
+            $filters = $parsed_url['query'];
           }
         }
 
-        $data = $this->connector->getAgenda($agenda_uid, $filters, -1, $events_in_preview);
+        $data = $this->connector->getAgendaEvents($agenda_uid, $filters + ['detailed' => 1], 0, $events_in_preview);
 
         if (isset($data['success']) && $data['success'] == FALSE) {
           $block = [
@@ -192,18 +200,33 @@ class OpenagendaPreviewBlock extends BlockBase implements ContainerFactoryPlugin
         }
         else {
           if (!empty($data['events'])) {
+
+            // Block.
             $block = [
               '#theme' => 'openagenda_preview',
-              '#entity' => $node,
+              '#entity' => $entity,
               '#events' => $data['events'],
               '#lang' => $this->configuration['language'],
+              '#columns' => $this->config->get('openagenda.default_columns', 3),
             ];
+
+            // Defaut style library ?
+            if ($default_style = $this->config->get('openagenda.default_style')) {
+              $block['#attached']['library'] = ['openagenda/openagenda.' . $default_style];
+            }
           }
         }
       }
     }
 
     return $block;
+  }
+
+  /**
+   * @return int
+   */
+  public function getCacheMaxAge() {
+    return 0;
   }
 
 }

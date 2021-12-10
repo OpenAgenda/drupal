@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Block(
  *   id = "openagenda_map_filter_block",
- *   admin_label = @Translation("OpenAgenda map filter"),
+ *   admin_label = @Translation("OpenAgenda - OSM Map filter"),
  *   category = @Translation("OpenAgenda"),
  *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
@@ -44,7 +44,7 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected $moduleConfig;
+  protected $config;
 
   /**
    * {@inheritdoc}
@@ -53,7 +53,7 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
     $this->helper = $helper;
-    $this->moduleConfig = \Drupal::config('openagenda.settings');
+    $this->config = \Drupal::config('openagenda.settings');
   }
 
   /**
@@ -87,22 +87,14 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
       '#type' => 'textfield',
       '#title' => $this->t('Map tiles URL'),
       '#description' => $this->t('URL of the map tiles to use for this widget.'),
-      '#default_value' => isset($config['map_tiles_url']) ? $config['map_tiles_url'] : $this->moduleConfig->get('openagenda.default_map_filter_tiles_uri'),
+      '#default_value' => isset($config['map_tiles_url']) ? $config['map_tiles_url'] : $this->config->get('openagenda.default_map_filter_tiles_uri'),
     ];
 
     $form['map_tiles_attribution'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Map tiles attribution'),
       '#description' => $this->t('Map tiles attribution to display on the map.'),
-      '#default_value' => isset($config['map_tiles_attribution']) ? $config['map_tiles_attribution'] : $this->moduleConfig->get('openagenda.default_map_filter_tiles_attribution'),
-    ];
-
-    $form['show_on_events'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Show on events'),
-      '#description' => $this->t('Show this widget when displaying an event.'),
-      '#return_value' => TRUE,
-      '#default_value' => isset($config['show_on_events']) ? $config['show_on_events'] : FALSE,
+      '#default_value' => isset($config['map_tiles_attribution']) ? $config['map_tiles_attribution'] : $this->config->get('openagenda.default_map_filter_tiles_attribution'),
     ];
 
     return $form;
@@ -116,7 +108,6 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
     $values = $form_state->getValues();
     $this->configuration['map_tiles_url'] = $values['map_tiles_url'];
     $this->configuration['map_tiles_attribution'] = $values['map_tiles_attribution'];
-    $this->configuration['show_on_events'] = $values['show_on_events'];
   }
 
   /**
@@ -129,16 +120,15 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
     // Check that we have an OpenAgenda node and that we are hitting the base
     // route (not an event).
     if ($node->hasField('field_openagenda')
-      && ((!empty($this->configuration['show_on_events']) && $this->routeMatch->getRouteName() == 'openagenda.event')
-      || $this->routeMatch->getRouteName() == 'entity.node.canonical')) {
+      && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
       $lang = $this->helper->getPreferredLanguage($node->get('field_openagenda')->language);
-      $agenda_uid = $node->get('field_openagenda')->uid;
-      $map_tiles_url = !empty($this->configuration['map_tiles_url']) ? $this->configuration['map_tiles_url'] : $this->moduleConfig->get('openagenda.default_map_filter_tiles_uri');
+      $map_tiles_url = !empty($this->configuration['map_tiles_url']) ? $this->configuration['map_tiles_url'] : $this->config->get('openagenda.default_map_filter_tiles_uri');
+      $map_tiles_attribution = !empty($this->configuration['map_tiles_attribution']) ? $this->configuration['map_tiles_attribution'] : $this->config->get('openagenda.default_map_filter_tiles_attribution');
 
       $block = [
         '#theme' => 'openagenda_map_filter',
-        '#agenda_uid' => $agenda_uid,
         '#map_tiles_url' => $map_tiles_url,
+        '#map_tiles_attribution' => $map_tiles_attribution,
         '#auto_search' => TRUE,
         '#lang' => $lang,
       ];
@@ -146,7 +136,6 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
       // Center on event location if we display the map on an event.
       $event = $this->routeMatch->getParameter('event');
       if (!empty($event) && !empty($event['uid'])) {
-        $block['#event_uid'] = $event['uid'];
         $block['#auto_search'] = FALSE;
       }
     }

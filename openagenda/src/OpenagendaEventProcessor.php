@@ -3,24 +3,20 @@
 namespace Drupal\openagenda;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Class OpenagendaEventProcessor.
  *
  * Prepares an agenda's data prior to display.
  */
-class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
+class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface
+{
   use StringTranslationTrait;
-
-  /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
 
   /**
    * The date formatter service.
@@ -37,10 +33,21 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
   protected $helper;
 
   /**
-   * {@inheritdoc}
+   * OpenAgenda module configuration object.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
    */
-  public function __construct(TimeInterface $time, DateFormatterInterface $date_formatter, OpenagendaHelperInterface $helper) {
-    $this->time = $time;
+  protected $config;
+
+  /**
+   * OpenagendaEventProcessor constructor.
+   *
+   * @param DateFormatterInterface $date_formatter
+   * @param OpenagendaHelperInterface $helper
+   */
+  public function __construct(DateFormatterInterface $date_formatter, OpenagendaHelperInterface $helper)
+  {
+    $this->config = \Drupal::config('openagenda.settings');
     $this->dateFormatter = $date_formatter;
     $this->helper = $helper;
   }
@@ -59,7 +66,8 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
    *   An agenda's render array or a simple markup to report
    *   that no agenda was found.
    */
-  public function buildRenderArray(array $event, EntityInterface $entity, array $context = []) {
+  public function buildRenderArray(array $event, EntityInterface $entity, array $context = [])
+  {
     $build = [];
 
     if ($entity->hasField('field_openagenda')) {
@@ -89,6 +97,11 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
       ];
     }
 
+    // Defaut style library ?
+    if ($default_style = $this->config->get('openagenda.default_style')) {
+      $build['#attached']['library'][] = 'openagenda/openagenda.' . $default_style;
+    }
+
     return $build;
   }
 
@@ -100,44 +113,44 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
    * @param string $lang
    *   Language code for date format.
    *
-   * @return string
-   *   String representing relative timing to event.
+   * @return TranslatableMarkup|null
+   *   TranslatableMarkup representing relative timing to event.
    */
-  public function processRelativeTimingToEvent(array $event, string $lang = 'fr') {
-    $relative_timing = '';
+  public function processRelativeTimingToEvent(array $event, string $lang = 'default')
+  {
+    $relative_timing = NULL;
 
     if (!empty($event) && !empty($event['timings'])) {
-      $request_time = $this->time->getRequestTime();
+      $nowDt = new DrupalDateTime();
 
       // Find next timing for the event.
       foreach ($event['timings'] as $timing) {
-        $t = strtotime($timing['start']);
+        $begin = DrupalDateTime::createFromFormat('Y-m-d\TH:i:sP', $timing['begin']);
 
-        if ($t > $request_time) {
-          $next_timing = $t;
+        if ($begin > $nowDt) {
+          $next_begin = $begin;
           break;
         }
       }
 
       // Modifiy string to reflect that we are working with next or last timing.
-      if (!empty($next_timing)) {
-        $formatted_time_diff = $this->dateFormatter->formatTimeDiffUntil($next_timing,
-        [
-          'granularity' => 1,
-          'langcode' => $lang,
-        ]);
+      if (!empty($next_begin)) {
+        $formatted_time_diff = $this->dateFormatter->formatTimeDiffUntil($next_begin->getTimestamp(),
+          [
+            'granularity' => 1,
+            'langcode' => $lang,
+          ]);
 
-        $relative_timing = $this->t('In @time_diff.', ['@time_diff' => $formatted_time_diff]);
-      }
-      else {
-        $last_timing = strtotime(array_pop($event['timings'])['end']);
-        $formatted_time_diff = $this->dateFormatter->formatTimeDiffSince($last_timing,
-        [
-          'granularity' => 1,
-          'langcode' => $lang,
-        ]);
+        $relative_timing = $this->t("In @time", ["@time" => $formatted_time_diff], ['langcode' => $lang]);
+      } else {
+        $last_end = DrupalDateTime::createFromFormat('Y-m-d\TH:i:sP', array_pop($event['timings'])['end']);
+        $formatted_time_diff = $this->dateFormatter->formatTimeDiffSince($last_end->getTimestamp(),
+          [
+            'granularity' => 1,
+            'langcode' => $lang,
+          ]);
 
-        $relative_timing = $this->t('@time_diff ago.', ['@time_diff' => $formatted_time_diff]);
+        $relative_timing = $this->t("@time ago", ["@time" => $formatted_time_diff], ['langcode' => $lang]);
       }
     }
 
@@ -155,7 +168,8 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
    * @return array
    *   An array of months and weeks with days and time range values.
    */
-  public function processEventTimetable(array $event, string $lang = 'fr') {
+  public function processEventTimetable(array $event, string $lang = 'default')
+  {
     $timetable = [];
     $current_month = '';
     $current_month_timings = [];
@@ -169,19 +183,17 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
       // Set the timezone to the location's timezone.
       if (!empty($event['location']) && !empty($event['location']['timezone'])) {
         $timezone = $event['location']['timezone'];
-      }
-      else {
+      } else {
         $timezone = 'Europe/Paris';
       }
 
       // Parse timings.
       foreach ($event['timings'] as $timing) {
         // Check our timing is valid (has a start and an end).
-        if (!empty($timing['start']) && !empty($timing['end'])) {
+        if (!empty($timing['begin']) && !empty($timing['end'])) {
 
           // Format of day (ex: Thursday 25).
-          $timing_day = $this->dateFormatter
-            ->format(strtotime($timing['start']), 'custom', 'l j', $timezone, $lang);
+          $timing_day = $this->dateFormatter->format(strtotime($timing['begin']), 'custom', 'l j', $timezone, $lang);
 
           // If this is a new day...
           if ($timing_day != $current_day) {
@@ -198,11 +210,9 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
             $current_day = $timing_day;
 
             // Format of month (ex: March 2021).
-            $timing_month = $this->dateFormatter
-              ->format(strtotime($timing['start']), 'custom', 'F Y', $timezone, $lang);
+            $timing_month = $this->dateFormatter->format(strtotime($timing['begin']), 'custom', 'F Y', $timezone, $lang);
             // Week number is only used to check for week change.
-            $timing_week = $this->dateFormatter
-              ->format(strtotime($timing['start']), 'custom', 'W', $timezone, $lang);
+            $timing_week = $this->dateFormatter->format(strtotime($timing['begin']), 'custom', 'W', $timezone, $lang);
 
             // If week or month has changed...
             if ($timing_week != $current_week || $timing_month != $current_month) {
@@ -231,7 +241,7 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
           }
 
           array_push($current_day_timings['timings'], [
-            'start' => $this->dateFormatter->format(strtotime($timing['start']), 'custom', 'H:i', $timezone, $lang),
+            'begin' => $this->dateFormatter->format(strtotime($timing['begin']), 'custom', 'H:i', $timezone, $lang),
             'end' => $this->dateFormatter->format(strtotime($timing['end']), 'custom', 'H:i', $timezone, $lang),
           ]);
         }
@@ -257,7 +267,8 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
    * @return array
    *   Metadata array attachable through html_head in the render array.
    */
-  public function processEventMetadata(array $event) {
+  public function processEventMetadata(array $event)
+  {
     $metadata = [];
 
     // Attaching og:type and og:url.
@@ -342,7 +353,7 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
           '#tag' => 'meta',
           '#attributes' => [
             'property' => 'og:image',
-            'content' => $event['image'],
+            'content' => $event['image']['base'] . $event['image']['filename'],
           ],
         ],
         'oa_event_og_image',
