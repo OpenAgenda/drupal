@@ -3,27 +3,26 @@
 namespace Drupal\openagenda\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\openagenda\OpenagendaHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides the OpenAgenda a timetable Block for an event.
+ * Provides the OpenAgenda relative filter Block.
  *
  * @Block(
- *   id = "openagenda_event_timetable_block",
- *   admin_label = @Translation("OpenAgenda - Event timetable"),
+ *   id = "openagenda_relative_filter_block",
+ *   admin_label = @Translation("OpenAgenda - Relative date filter"),
  *   category = @Translation("OpenAgenda"),
  *   context = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   },
  * )
  */
-class OpenagendaEventTimetableBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class OpenagendaRelativeFilterBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The OpenAgenda helper service.
@@ -72,30 +71,18 @@ class OpenagendaEventTimetableBlock extends BlockBase implements ContainerFactor
    * {@inheritdoc}
    */
   public function build() {
-    /** @var EntityInterface $entity */
-    $entity = $this->getContextValue('node');
+    $node = $this->getContextValue('node');
     $block = [];
-    $event = $this->routeMatch->getParameter('event');
 
-    // Check we have an event and the current node is a valid OpenAgenda node.
-    if (!empty($event) && $entity->hasField('field_openagenda')) {
-      $lang = $this->helper->getPreferredLanguage($entity->get('field_openagenda')->language);
-
+    // Check that we have an OpenAgenda node and that we are hitting the base
+    // route (not an event).
+    if ($node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
       $block = [
-        '#theme' => 'openagenda_event_timetable',
-        '#event' => $event,
-        '#lang' => $lang,
+        '#theme' => 'openagenda_relative_filter',
       ];
     }
 
     return $block;
-  }
-
-  /**
-   * @return int
-   */
-  public function getCacheMaxAge() {
-    return 0;
   }
 
 }

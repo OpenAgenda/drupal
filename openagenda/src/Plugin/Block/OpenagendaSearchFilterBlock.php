@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Block(
  *   id = "openagenda_search_filter_block",
- *   admin_label = @Translation("OpenAgenda search filter"),
+ *   admin_label = @Translation("OpenAgenda - Search filter"),
  *   category = @Translation("OpenAgenda"),
  *   context = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
@@ -113,11 +113,9 @@ class OpenagendaSearchFilterBlock extends BlockBase implements ContainerFactoryP
     // route (not an event).
     if ($node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
       $lang = $this->helper->getPreferredLanguage($node->get('field_openagenda')->language);
-      $agenda_uid = $node->get('field_openagenda')->uid;
-      $placeholder = !empty($this->configuration['input_placeholder']) ? $this->configuration['input_placeholder'] : $this->moduleConfig->get('openagenda.default_search_filter_placeholder');
+      $placeholder = !empty($this->configuration['input_placeholder']) ? $this->configuration['input_placeholder'] : $this->t($this->moduleConfig->get('openagenda.default_search_filter_placeholder'));
       $block = [
         '#theme' => 'openagenda_search_filter',
-        '#agenda_uid' => $agenda_uid,
         '#placeholder' => $placeholder,
         '#lang' => $lang,
       ];

@@ -11,18 +11,18 @@ use Drupal\openagenda\OpenagendaHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides the OpenAgenda calendar filter Block.
+ * Provides the OpenAgenda cities filter Block.
  *
  * @Block(
- *   id = "openagenda_calendar_filter_block",
- *   admin_label = @Translation("OpenAgenda calendar filter"),
+ *   id = "openagenda_total_filter_block",
+ *   admin_label = @Translation("OpenAgenda - Total results block"),
  *   category = @Translation("OpenAgenda"),
  *   context = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   },
  * )
  */
-class OpenagendaCalendarFilterBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class OpenagendaTotalFilterBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The OpenAgenda helper service.
@@ -77,13 +77,8 @@ class OpenagendaCalendarFilterBlock extends BlockBase implements ContainerFactor
     // Check that we have an OpenAgenda node and that we are hitting the base
     // route (not an event).
     if ($node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
-      $lang = $this->helper->getPreferredLanguage($node->get('field_openagenda')->language);
-      $agenda_uid = $node->get('field_openagenda')->uid;
-
       $block = [
-        '#theme' => 'openagenda_calendar_filter',
-        '#agenda_uid' => $agenda_uid,
-        '#lang' => $lang,
+        '#theme' => 'openagenda_total_filter',
       ];
     }
 

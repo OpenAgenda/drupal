@@ -1,3 +1,5 @@
+{{ attach_library('openagenda/openagenda.event-timetable') }}
+
 <div class="timings js_timings">
   <ul class="months">
     {% for month in event.timetable %}
@@ -17,7 +19,7 @@
               <li class="month-item">
                 <span class="day">{{ day.label }}</span>
                 {% for timing in day.timings %}
-                  <span class="hour">{{ timing.start }}-{{ timing.end }}</span>
+                  <span class="hour">{{ timing.begin }}-{{ timing.end }}</span>
                 {% endfor %}
               </li>
               {% endfor %}
@@ -28,4 +30,3 @@
       {% endfor %}
     </ul>
 </div>
-{{ attach_library('openagenda/openagenda.timetable') }}

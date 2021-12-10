@@ -2,8 +2,8 @@
 
 namespace Drupal\openagenda\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -18,12 +18,14 @@ use Drupal\Core\TypedData\DataDefinition;
  *   cardinality = 1,
  * )
  */
-class Openagenda extends FieldItemBase {
+class Openagenda extends FieldItemBase
+{
 
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldStorageDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition)
+  {
     return [
       'columns' => [
         'uid' => [
@@ -56,7 +58,8 @@ class Openagenda extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition)
+  {
     $properties['uid'] = DataDefinition::create('string')
       ->setLabel(t('OpenAgenda UID'))
       ->setRequired(TRUE);
@@ -79,7 +82,8 @@ class Openagenda extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function isEmpty() {
+  public function isEmpty()
+  {
     $value = $this->get('uid')->getValue();
     return $value === NULL || $value === '';
   }

@@ -2,19 +2,23 @@
   width: 80%;
   margin-left: 40px;
 }
+
 .timings ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
+
 .timings .month {
   width: 100%;
   display: none;
   margin: 10px 10px 30px 0;
 }
+
 .timings .month.displayed {
   display: inline-block;
 }
+
 .timings .month-title {
   border-bottom: 1px solid silver;
   border-top: 1px solid silver;
@@ -24,14 +28,18 @@
   position: relative;
   text-align: center;
 }
+
 .timings .month-title h4 {
   font-size: 1em;
   font-weight: bold;
   margin: 0;
+  text-transform: capitalize;
 }
+
 .timings .month-title h4, .timings .month-title i {
   display: inline-block;
 }
+
 .timings .month-title i {
   color: #413a42;
   cursor: pointer;
@@ -39,42 +47,53 @@
   position: absolute;
   top: 0;
 }
+
 .timings .month-title i:hover {
   color: #41acdd;
 }
+
 .timings .month-title .prev {
   left: 0;
 }
+
 .timings .month-title .next {
   right: 0;
 }
+
 .timings .month-list {
   margin-bottom: 10px;
 }
+
 .timings .month-item {
   padding: 5px;
   position: relative;
 }
+
 .timings .month-item span {
   display: inline-block;
   width: 50%;
 }
+
 .timings .month-item.passed {
   opacity: 0.5;
 }
+
 .timings .month .week-separator {
   margin: 10px 0;
   border-bottom: 1px solid #ccc;
 }
+
 .timings .month-current {
   display: block;
 }
+
 .timings .day {
   font-weight: 500;
   position: absolute;
   top: 5px;
   left: 5px;
 }
+
 .timings .hour {
   color: gray;
   font-weight: 300;
@@ -82,17 +101,27 @@
   white-space: nowrap;
   text-align: right;
 }
+
 .timings.detail-item {
   padding: 0;
 }
+
 .timings.detail-item h3 {
   margin-top: 5px;
   vertical-align: top;
 }
+
 .timings.no-js {
   width: 100%;
   margin-left: 0;
 }
+
 .timings.no-js .prev, .timings.no-js .next {
   display: none;
+}
+
+.timings ul.months,
+.timings ul.month-list {
+  margin: 0;
+  padding: 0;
 }

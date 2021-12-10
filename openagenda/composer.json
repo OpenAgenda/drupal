@@ -2,5 +2,8 @@
     "name": "drupal/openagenda",
     "description": "Integrates OpenAgenda.",
     "type": "drupal-module",
-    "license": "GPL-2.0+"
+    "license": "GPL-2.0+",
+    "require": {
+        "openagenda/sdk-php": ">=1.0.0"
+    }
 }
