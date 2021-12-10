@@ -1,22 +1,15 @@
-<div id="openagenda-wrapper">
-  {% if not total == 0 %}
-    {% trans %}
-      1 event.
-    {% plural total %}
-      {{ total }} events.
-    {% endtrans %}
+<div id="oa-wrapper" class="oa-agenda">
+  {% if total and total > 0 %}
     {% include "openagenda-export-links.html.twig" %}
   {% else %}
-    {% trans %}
-      There are no events with these search parameters.
-    {% endtrans %}
+    {{ 'There are no events with these search parameters.'|t }}
   {% endif %}
-  <ul>
+  <ul class="oa-list oa-list--x{{ columns }}">
     {% for event in events %}
-      <li{{ loop.first ? ' class="first"' }} >
+      <li class="oa-list__item">
         {{ event.content }}
-      </li>        
-    {% endfor %}    
+      </li>
+    {% endfor %}
   </ul>
   {{ pager }}
 </div>

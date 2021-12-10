@@ -3,19 +3,20 @@
 namespace Drupal\openagenda;
 
 use Drupal\Component\Serialization\SerializationInterface;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
 
 /**
  * Class OpenagendaHelper.
  *
  * Utility functions.
  */
-class OpenagendaHelper implements OpenagendaHelperInterface {
+class OpenagendaHelper implements OpenagendaHelperInterface
+{
 
   /**
    * The JSON serializer/deserializer service.
@@ -55,7 +56,8 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(SerializationInterface $json, LanguageManagerInterface $language_manager, AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(SerializationInterface $json, LanguageManagerInterface $language_manager, AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager)
+  {
     $this->json = $json;
     $this->languageManager = $language_manager;
     $this->currentUser = $current_user;
@@ -69,20 +71,21 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    *   Position of event in current search.
    * @param int $total
    *   Total number of events returned by current search.
-   * @param array $search
+   * @param array $filters
    *   Array of search parameters.
    *
    * @return string
    *   Encoded context.
    */
-  public function encodeContext(int $index, int $total, array $search) {
+  public function encodeContext(int $index, int $total, array $filters)
+  {
     $context = [
       'index' => $index,
       'total' => $total,
     ];
 
-    if (!empty($search)) {
-      $context['search'] = $search;
+    if (!empty($filters)) {
+      $context['filters'] = $filters;
     }
 
     return base64_encode($this->json->encode($context));
@@ -97,7 +100,8 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    * @return array
    *   Decoded context.
    */
-  public function decodeContext(string $serialized_context) {
+  public function decodeContext(string $serialized_context)
+  {
     return $this->json->decode(base64_decode($serialized_context));
   }
 
@@ -114,7 +118,8 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    * @return \Drupal\Core\Url
    *   The event's url.
    */
-  public function createEventUrl(EntityInterface $node, string $event_slug, string $oac) {
+  public function createEventUrl(EntityInterface $node, string $event_slug, string $oac)
+  {
     $url = Url::fromRoute('openagenda.event', [
       'node' => $node->id(),
       'event' => $event_slug,
@@ -143,7 +148,8 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    * @return string
    *   The value best matching the language.
    */
-  public function getLocalizedValue(array $data, string $key, string $content_language = 'default') {
+  public function getLocalizedValue(array $data, string $key, string $content_language = 'default')
+  {
     $value = '';
     $language_priority_list = array_keys($this->getLanguagePriorityList($content_language));
 
@@ -169,8 +175,9 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    * @param string $content_language
    *   The content language.
    */
-  public function localizeEvent(array &$event, string $content_language = 'default') {
-    $localized_properties = ['title', 'description', 'range', 'html'];
+  public function localizeEvent(array &$event, string $content_language = 'default')
+  {
+    $localized_properties = ['title', 'description', 'country', 'dateRange', 'longDescription', 'keywords', 'conditions'];
 
     foreach ($localized_properties as $localized_property) {
       $event[$localized_property] = $this->getLocalizedValue($event, $localized_property, $content_language);
@@ -186,7 +193,8 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    * @return array
    *   The ordered language priority list.
    */
-  protected function getLanguagePriorityList(string $content_language = 'default') {
+  protected function getLanguagePriorityList(string $content_language = 'default')
+  {
     if (empty($this->languagePriorityList)) {
       $this->setLanguagePriorityList($content_language);
     }
@@ -203,7 +211,8 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    * @return string
    *   The preferred language code.
    */
-  public function getPreferredLanguage(string $content_language = 'default') {
+  public function getPreferredLanguage(string $content_language = 'default')
+  {
     $langcode_priority_list = array_keys($this->getLanguagePriorityList($content_language));
     return reset($langcode_priority_list);
   }
@@ -222,7 +231,8 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    *
    * @return $this
    */
-  protected function setLanguagePriorityList(string $content_language = 'default') {
+  protected function setLanguagePriorityList(string $content_language = 'default')
+  {
     $language_list = $this->getAvailableLanguages();
     $ordered_langcodes = [];
 
@@ -256,7 +266,8 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    * @return array
    *   The available languages keyed by language code.
    */
-  public function getAvailableLanguages() {
+  public function getAvailableLanguages()
+  {
     return [
       'fr' => 'Français',
       'en' => 'English',
@@ -271,8 +282,12 @@ class OpenagendaHelper implements OpenagendaHelperInterface {
    *
    * @return array
    *   List of node titles keyed by their id.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getOpenagendaNodes() {
+  public function getOpenagendaNodes()
+  {
     $nodes = [];
 
     $query = $this->entityTypeManager->getStorage('node')->getQuery();

@@ -15,21 +15,21 @@
       }
 
       // Pager navigation.
-      $( 'body' ).on( 'click', '#openagenda-wrapper .pager a', function( event ) {
+      $( 'body' ).on( 'click', '#oa-wrapper .pager a', function( event ) {
         event.preventDefault();
         let ajaxUrl = 'openagenda/' + drupalSettings.openagenda.nid + '/ajax';
 
         if (!$(this).closest( '.pager__item' ).hasClass('is-active')) {
           ajaxUrl += $(this).attr('href');
 
-          // Show Ajax Throbber, automagically removed when content is replaced/page reloaded.
-          $( '#openagenda-wrapper' ).append('<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>');
+          // Show Ajax Throbber, automatically removed when content is replaced/page reloaded.
+          $( '#oa-wrapper' ).append('<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>');
 
           // Ajax query execution.
           Drupal.ajax({
             url: Drupal.url(ajaxUrl),
           }).execute().done(function() {
-            document.getElementById('openagenda-wrapper').scrollIntoView();
+            document.getElementById('oa-wrapper').scrollIntoView();
           });
         }
       });

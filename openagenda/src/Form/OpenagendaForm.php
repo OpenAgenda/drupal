@@ -89,6 +89,33 @@ class OpenagendaForm extends ConfigFormBase {
       '#default_value' => $config->get('openagenda.include_embedded'),
     ];
 
+    $form['default_openagenda_display'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Default OpenAgenda display settings'),
+    ];
+
+    $form['default_openagenda_display']['default_style'] = [
+      '#type' => 'select',
+      '#title' => $this->t('OpenAgenda default style'),
+      '#options' => [
+        'agenda' => $this->t('OpenAgenda'),
+        -1 => $this->t('None'),
+      ],
+      '#default_value' => $config->get('openagenda.default_style'),
+    ];
+
+    $form['default_openagenda_display']['default_columns'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Events per column'),
+      '#options' => [
+        1 => 1,
+        2 => 2,
+        3 => 3,
+        4 => 4,
+      ],
+      '#default_value' => $config->get('openagenda.default_columns'),
+    ];
+
     $form['default_map_filter_settings'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Default map filter settings'),
@@ -138,6 +165,8 @@ class OpenagendaForm extends ConfigFormBase {
     $config->set('openagenda.events_per_page', $form_state->getValue('events_per_page'));
     $config->set('openagenda.default_language', $form_state->getValue('default_language'));
     $config->set('openagenda.include_embedded', $form_state->getValue('include_embedded'));
+    $config->set('openagenda.default_style', $form_state->getValue('default_style'));
+    $config->set('openagenda.default_columns', $form_state->getValue('default_columns'));
     $config->set('openagenda.default_map_filter_tiles_uri', $form_state->getValue('default_map_filter_tiles_uri'));
     $config->set('openagenda.default_map_filter_tiles_attribution', $form_state->getValue('default_map_filter_tiles_attribution'));
     $config->set('openagenda.default_search_filter_placeholder', $form_state->getValue('default_search_filter_placeholder'));

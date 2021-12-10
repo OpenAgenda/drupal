@@ -1,32 +1,52 @@
-<article id="event-{{ event.origin.uid }}" class="oa-event oa-single-event">
-	<div class="oa-event-navigation clearfix">
+<article id="event-{{ event.uid }}" class="oa-event oa-event--single">
+	<div class="oa-links clearfix">
 		{% if agenda_url %}
-			<a class="oa-agenda-link" href="{{ agenda_url }}">{{ 'Back to agenda'|t }}</a>
+			<a class="oa-links__back" href="{{ agenda_url }}">{{ 'Back to agenda'|t }}</a>
 		{% endif %}
 
-		{% if index and total %}
-			{% if previous_event_url %}
-				<a href="{{ previous_event_url }}">{{ 'Previous'|t }}</a>
-			{% else %}
-				<span>{{ 'Previous'|t }}</span>
-			{% endif %}
+    <div class="oa-links__nav">
+      {% if index and total %}
+        {% if previous_event_url %}
+          <a href="{{ previous_event_url }}">{{ 'Previous'|t }}</a>
+        {% else %}
+          <span>{{ 'Previous'|t }}</span>
+        {% endif %}
 
-			{{ index }}/{{ total }}
+        {{ index }}/{{ total }}
 
-			{% if next_event_url %}
-				<a href="{{ next_event_url }}">{{ 'Next'|t }}</a>
-			{% else %}
-				<span>{{ 'Next'|t }}</span>
-			{% endif %}
-		{% endif %}
+        {% if next_event_url %}
+          <a href="{{ next_event_url }}">{{ 'Next'|t }}</a>
+        {% else %}
+          <span>{{ 'Next'|t }}</span>
+        {% endif %}
+      {% endif %}
+    </div>
 	</div>
-	<div class="oa-event-wrapper">
-		<header class="oa-event-header">
-			<p class="oa-entry-description">{{ event.description }}</p>
-			{% if event.image %}
-			<div class="oa-event-thumbnail"><img src="{{ event.image }}" alt="{{ event.title }}" /></div>
-			{% endif %}
+	<div class="oa-event__wrapper">
+		<header class="oa-event__header">
+			<p class="oa-event-description oa-event-description--short">{{ event.description }}</p>
+      {% if event.image %}
+        <figure class="oa-event-picture">
+          <img src="{{ event.image.base ~ event.image.filename }}" alt="{{ event.title }}" />
+          {% if event.imageCredits %}
+            <figcaption>{{ event.imageCredits }}</figcaption>
+          {% endif %}
+        </figure>
+      {% endif %}
 		</header>
-		<div class="oa-event-details">{{ event.html }}</div>
+		<div class="oa-event__content">
+      {% if event.keywords is not null and event.keywords|length > 0 %}
+        <ul class="oa-event-keywords">
+          {% for keyword in event.keywords %}
+            <li class="oa-event-keyword"><a href="{{ path('entity.node.canonical', {'node':  entity.id, 'search' : keyword}) }}">#{{ keyword }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if event.location.city is not null and event.location.city != '' %}
+        <div class="oa-event-location">{{ event.location.address and event.location.address != '' ? event.location.address : event.location.city }}</div>
+      {% endif %}
+      <div class="oa-event-daterange">{{ event.dateRange }}</div>
+      <p class="oa-event-description oa-event-description--long">{{ event.longDescription|raw }}</p>
+    </div>
 	</div>
 </article>

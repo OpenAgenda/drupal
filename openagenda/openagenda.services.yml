@@ -1,7 +1,7 @@
 services:
   openagenda.connector:
     class: Drupal\openagenda\OpenagendaConnector
-    arguments: ['@http_client', '@request_stack']
+    arguments: ['@request_stack']
 
   openagenda.path_processor:
     class: Drupal\openagenda\PathProcessor\OpenagendaPathProcessor
@@ -16,7 +16,7 @@ services:
 
   openagenda.event_processor:
     class: Drupal\openagenda\OpenagendaEventProcessor
-    arguments: ['@datetime.time', '@date.formatter', '@openagenda.helper']
+    arguments: ['@date.formatter', '@openagenda.helper']
 
   openagenda.event_converter:
     class: Drupal\openagenda\ParamConverter\OpenagendaEventConverter
@@ -26,4 +26,4 @@ services:
 
   openagenda.helper:
     class: Drupal\openagenda\OpenagendaHelper
-    arguments: ['@serialization.json', '@language_manager', '@current_user', '@entity_type.manager']    
+    arguments: ['@serialization.json', '@language_manager', '@current_user', '@entity_type.manager']

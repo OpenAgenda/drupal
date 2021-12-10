@@ -3,6 +3,7 @@
 namespace Drupal\openagenda;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Interface for OpenagendaAgendaProcessor.
@@ -30,11 +31,13 @@ interface OpenagendaEventProcessorInterface {
    *
    * @param array $event
    *   The event to parse.
+   * @param string $lang
+   *   Language code for date format.
    *
-   * @return string
-   *   String representing relative timing to event.
+   * @return TranslatableMarkup|null
+   *   TranslatableMarkup representing relative timing to event.
    */
-  public function processRelativeTimingToEvent(array $event);
+  public function processRelativeTimingToEvent(array $event, string $lang = 'default');
 
   /**
    * Process an event's timetable.

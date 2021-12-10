@@ -7,12 +7,8 @@
 
   'use strict';
 
-  Drupal.behaviors.openAgendaTimetable = {
+  Drupal.behaviors.eventTimetable = {
     attach: function (context) {
-      // Load only once.
-      if (context !== document) {
-        return;
-      }
 
       // Event timetable navigation.
       $( '.js_timings .js_next' ).click( navTimings.bind( null, 'next' ) );
@@ -21,6 +17,7 @@
       function navTimings( direction, e ) {
         $( e.target ).closest( '.js_month' ).removeClass( 'displayed' )[ direction ]().addClass( 'displayed' );
       }
+
     }
   };
 })(jQuery, Drupal, drupalSettings);

@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Converts parameters for upcasting event to full objoect.
+ * Converts parameters for upcasting event to full object.
  */
 class OpenagendaEventConverter implements ParamConverterInterface {
 
@@ -24,34 +24,34 @@ class OpenagendaEventConverter implements ParamConverterInterface {
   /**
    * The event processor service.
    *
-   * @var \Drupal\openagenda\OpenagendaEventProcessorInterface
+   * @var OpenagendaEventProcessorInterface
    */
   protected $eventProcessor;
 
   /**
    * The OpenAgenda helper service.
    *
-   * @var \Drupal\openagenda\OpenagendaHelperInterface
+   * @var OpenAgendaHelperInterface
    */
   protected $helper;
 
   /**
    * The request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
+   * @var RequestStack
    */
   protected $requestStack;
 
   /**
-   * Constructs a new OpenAgendaEventConverter.
+   * OpenagendaEventConverter constructor.
    *
-   * @param \Drupal\openagenda\OpenagendaConnectorInterface $connector
+   * @param OpenAgendaConnectorInterface $connector
    *   The OpenAgenda connector service.
-   * @param \Drupal\openagenda\OpenagendaEventProcessorInterface $event_processor
+   * @param OpenagendaEventProcessorInterface $event_processor
    *   The event processor service.
-   * @param \Drupal\openagenda\OpenagendaHelperInterface $helper
+   * @param OpenAgendaHelperInterface $helper
    *   The OpenAgenda helper service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param RequestStack $request_stack
    *   The request stack.
    */
   public function __construct(OpenagendaConnectorInterface $connector, OpenagendaEventProcessorInterface $event_processor, OpenagendaHelperInterface $helper, RequestStack $request_stack) {
@@ -78,14 +78,12 @@ class OpenagendaEventConverter implements ParamConverterInterface {
         $context = $this->helper->decodeContext($oac);
 
         if (isset($context['index'])) {
-          $filters = !empty($context['search']) ? $context['search'] : [];
+          $filters = !empty($context['filters']) ? $context['filters'] : [];
           $event_triplet = $this->connector->getEventTriplet($agenda_uid, $filters, $context['index']);
 
           // We check at least a current event was found and also that its slug
           // matches with the url in case a wrong oac was given.
-          if (!empty($event_triplet)
-              && !empty($event_triplet['current'])
-              && !empty($event_triplet['current']['slug'])
+          if (isset($event_triplet['current']['slug'])
               && $event_triplet['current']['slug'] == $value) {
             $event = $event_triplet['current'];
 

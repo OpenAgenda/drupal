@@ -1,88 +1,63 @@
 openagenda.agenda:
+  js:
+    assets/js/openagenda-agenda.js: {}
   css:
     component:
-      css/agenda.css: {}
+      assets/css/openagenda.css: {}
 
-openagenda.event:
+openagenda.openagenda-leaflet:
+  js:
+    assets/js/leaflet.js: {}
   css:
     component:
-      css/event.css: {}
+      assets/css/openagenda-leaflet.css: {}
+
+openagenda.event-map:
+  js:
+    assets/js/openagenda-event-map.js: {}
+  css:
+    component:
+      assets/css/openagenda-leaflet.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+    - openagenda/openagenda.openagenda-leaflet
+
+openagenda.reactfilters:
+  css:
+    component:
+      https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css: { type: external, minified: true }
+  js:
+    https://unpkg.com/@openagenda/react-filters@2.4.1/dist/main.js: { type: external, minified: true }
 
 openagenda.filters:
-  version: 1.x
   js:
-    js/openagenda-filters.js: {}
+    assets/js/openagenda-filters.js: {}
   dependencies:
     - core/jquery
     - core/drupalSettings
     - core/drupal.ajax
+    - openagenda/openagenda.reactfilters
+
+openagenda.daterange-filter:
+  css:
+    component:
+      assets/css/openagenda-daterange-filter.css: {}
 
 openagenda.pager:
   js:
-    js/openagenda-pager.js: {}
+    assets/js/openagenda-pager.js: {}
   dependencies:
     - core/jquery
     - core/drupalSettings
     - core/drupal.ajax
 
-openagenda.timetable:
+openagenda.event-timetable:
   css:
     component:
-      css/timetable.css: {}
+      assets/css/openagenda-event-timetable.css: {}
   js:
-    js/openagenda-timetable.js: {}
+    assets/js/openagenda-event-timetable.js: {}
   dependencies:
     - core/jquery
 
-openagenda.preview:
-  css:
-    component:
-      css/preview.css: {}
-
-openagenda.activetags:
-  css:
-    component:
-      css/active_tags.css: {}
-  js:
-    //openagenda.com/js/embed/oaActiveFilters.js: { type: external, minified: true }
-  dependencies:
-    - openagenda/openagenda.filters
-
-openagenda.tagfilter:
-  css:
-    component:
-      css/tag_filter.css: {}
-  js:
-    //openagenda.com/js/embed/cibulTagsWidget.js: { type: external, minified: true }
-  dependencies:
-    - openagenda/openagenda.filters
-
-openagenda.calendarfilter:
-  css:
-    component:
-      css/calendar_filter.css: {}
-  js:
-    //openagenda.com/js/embed/cibulCalendarWidget.js: { type: external, minified: true }
-  dependencies:
-    - openagenda/openagenda.filters
-
-openagenda.mapfilter:
-  js:
-    //openagenda.com/js/embed/cibulMapWidget.js: { type: external, minified: true }
-  dependencies:
-    - openagenda/openagenda.filters
-
-openagenda.relativedatesfilter:
-  css:
-    component:
-      css/relative_dates_filter.css: {}
-  js:
-    //openagenda.com/js/embed/oaRelativeWidget.js: { type: external, minified: true }
-  dependencies:
-    - openagenda/openagenda.filters
-
-openagenda.searchfilter:
-  js:
-    //openagenda.com/js/embed/cibulSearchWidget.js: { type: external, minified: true }
-  dependencies:
-    - openagenda/openagenda.filters
