@@ -10,7 +10,7 @@ REQUIREMENTS
 ------------
 
 OpenAgenda requires at least Drupal 8.0:
-- `8.x-3.x` versions are compatible with Drupal 8.8+/9.
+- `3.x` versions are compatible with Drupal 8.8+/9.
 - `8.x-2.x` versions are compatible with Drupal 8.3 to 8.7.
 - `8.x-1.x` versions are compatible with Drupal 8.0 to 8.2.
 
