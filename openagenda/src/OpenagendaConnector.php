@@ -44,7 +44,7 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
   public function __construct(RequestStack $request_stack)
   {
     $this->config = \Drupal::config('openagenda.settings');
-    $this->sdk = new OpenAgendaSdk($this->config->get('openagenda.public_key'));
+    $this->sdk = new OpenAgendaSdk($this->config->get('openagenda.public_key', ''));
     $this->requestStack = $request_stack;
   }
 
