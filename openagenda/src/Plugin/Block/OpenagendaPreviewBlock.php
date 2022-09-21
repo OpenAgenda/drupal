@@ -173,7 +173,7 @@ class OpenagendaPreviewBlock extends BlockBase implements ContainerFactoryPlugin
     if (!empty($this->configuration['agenda_reference'])) {
       $entity = $this->entityTypeManager->getStorage('node')->load($this->configuration['agenda_reference']);
 
-      if ($entity->hasField('field_openagenda')) {
+      if ($entity && $entity->hasField('field_openagenda')) {
         $agenda_uid = $entity->get('field_openagenda')->uid;
         $events_in_preview = $this->configuration['events_in_preview'];
 
@@ -191,6 +191,19 @@ class OpenagendaPreviewBlock extends BlockBase implements ContainerFactoryPlugin
           }
         }
 
+        // Get pre-filters and add them to filters if defined.
+        $preFilters = $this->helper->getPreFilters($entity);
+
+        // Current & upcoming events only.
+        $currentValue = $entity->get('field_openagenda')->current;
+        if (!empty($currentValue)) {
+          $preFilters['relative'] = [
+            'current',
+            'upcoming',
+          ];
+        }
+        $filters += $preFilters;
+
         $data = $this->connector->getAgendaEvents($agenda_uid, $filters + ['detailed' => 1], 0, $events_in_preview);
 
         if (isset($data['success']) && $data['success'] == FALSE) {
@@ -200,20 +213,20 @@ class OpenagendaPreviewBlock extends BlockBase implements ContainerFactoryPlugin
         }
         else {
           if (!empty($data['events'])) {
-
+            $style = $this->config->get('openagenda.default_style', 'default');
             // Block.
             $block = [
-              '#theme' => 'openagenda_preview',
+              '#theme' => 'block__openagenda_preview',
               '#entity' => $entity,
               '#events' => $data['events'],
               '#lang' => $this->configuration['language'],
               '#columns' => $this->config->get('openagenda.default_columns', 3),
+              '#attached' => [
+                'library' => [
+                  'openagenda/openagenda.style.' . $style,
+                  ],
+              ],
             ];
-
-            // Defaut style library ?
-            if ($default_style = $this->config->get('openagenda.default_style')) {
-              $block['#attached']['library'] = ['openagenda/openagenda.' . $default_style];
-            }
           }
         }
       }
@@ -224,6 +237,7 @@ class OpenagendaPreviewBlock extends BlockBase implements ContainerFactoryPlugin
 
   /**
    * @return int
+   *   Cache max age.
    */
   public function getCacheMaxAge() {
     return 0;

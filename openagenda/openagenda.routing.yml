@@ -31,6 +31,7 @@ openagenda.ajax:
     parameters:
       node:
         type: entity:node
+    no_cache: 'TRUE'
   requirements:
     _permission: 'access content'
     _entity_access: node.view

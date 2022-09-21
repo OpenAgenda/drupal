@@ -10,6 +10,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\openagenda\OpenagendaHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use \Drupal;
 
 /**
  * Provides the OpenAgenda map filter Block.
@@ -53,7 +54,7 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
     $this->helper = $helper;
-    $this->config = \Drupal::config('openagenda.settings');
+    $this->config = Drupal::config('openagenda.settings');
   }
 
   /**
@@ -119,14 +120,14 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
 
     // Check that we have an OpenAgenda node and that we are hitting the base
     // route (not an event).
-    if ($node->hasField('field_openagenda')
+    if ($node && $node->hasField('field_openagenda')
       && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
       $lang = $this->helper->getPreferredLanguage($node->get('field_openagenda')->language);
       $map_tiles_url = !empty($this->configuration['map_tiles_url']) ? $this->configuration['map_tiles_url'] : $this->config->get('openagenda.default_map_filter_tiles_uri');
       $map_tiles_attribution = !empty($this->configuration['map_tiles_attribution']) ? $this->configuration['map_tiles_attribution'] : $this->config->get('openagenda.default_map_filter_tiles_attribution');
 
       $block = [
-        '#theme' => 'openagenda_map_filter',
+        '#theme' => 'block__openagenda_map_filter',
         '#map_tiles_url' => $map_tiles_url,
         '#map_tiles_attribution' => $map_tiles_attribution,
         '#auto_search' => TRUE,

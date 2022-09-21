@@ -1,5 +1,20 @@
+{#
+/**
+ * @file
+ * Default theme implementation for map filter block.
+ *
+ * Available variables:
+ * - map_tiles_url: osm map tiles url.
+ * - map_tiles_attribution: osm map tiles attribution.
+ * - auto_search: indicates wheter to reload results or not on map change.
+ *
+ * @see template_preprocess_block()
+ *
+ * @ingroup themeable
+ */
+#}
+
 {{ attach_library('openagenda/openagenda.openagenda-leaflet') }}
-{{ attach_library('openagenda/openagenda.filters') }}
 
 <div class="oa-map-filter map-container oa-filter"
   data-oa-filter="map"

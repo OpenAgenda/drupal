@@ -2,12 +2,12 @@
 
 namespace Drupal\openagenda\Plugin\Block;
 
+use Drupal;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
 use Drupal\openagenda\OpenagendaHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -53,7 +53,7 @@ class OpenagendaEventMapBlock extends BlockBase implements ContainerFactoryPlugi
   public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, OpenagendaHelperInterface $helper)
   {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->config = \Drupal::config('openagenda.settings');
+    $this->config = Drupal::config('openagenda.settings');
     $this->routeMatch = $route_match;
     $this->helper = $helper;
   }
@@ -90,13 +90,16 @@ class OpenagendaEventMapBlock extends BlockBase implements ContainerFactoryPlugi
     $event = $this->routeMatch->getParameter('event');
 
     // Check we have an event and the current node is a valid OpenAgenda node.
-    if (!empty($event) && $node->hasField('field_openagenda') && !empty($event['location']) && !empty($event['location']['latitude'])) {
-      $module_handler = \Drupal::service('module_handler');
+    if (!empty($event) && $node && $node->hasField('field_openagenda') && !empty($event['location']) && !empty($event['location']['latitude'])) {
+      $module_handler = Drupal::service('module_handler');
       $module_path = $GLOBALS['base_url'] . '/' . $module_handler->getModule('openagenda')->getPath();
+      $style = $this->config->get('openagenda.default_style', 'default');
       $block = [
-        '#theme' => 'openagenda_event_map',
+        '#theme' => 'block__openagenda_event_map',
         '#attached' => [
-          'library' => [],
+          'library' => [
+            'openagenda/openagenda.style.' . $style,
+          ],
           'drupalSettings' => [
             'openagenda' => [
               'event' => [
@@ -106,7 +109,7 @@ class OpenagendaEventMapBlock extends BlockBase implements ContainerFactoryPlugi
               ],
               'leaflet' => [
                 'markerUrl' => $module_path . '/assets/img/marker-icon.svg',
-              ]
+              ],
             ],
           ],
         ],
@@ -123,8 +126,10 @@ class OpenagendaEventMapBlock extends BlockBase implements ContainerFactoryPlugi
 
   /**
    * @return int
+   *   Cache max age.
    */
-  public function getCacheMaxAge() {
+  public function getCacheMaxAge()
+  {
     return 0;
   }
 

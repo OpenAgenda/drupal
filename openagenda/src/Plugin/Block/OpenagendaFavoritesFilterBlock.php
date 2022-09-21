@@ -11,18 +11,18 @@ use Drupal\openagenda\OpenagendaHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides the OpenAgenda relative filter Block.
+ * Provides the OpenAgenda active filters summary Block.
  *
  * @Block(
- *   id = "openagenda_relative_filter_block",
- *   admin_label = @Translation("OpenAgenda - Relative date filter"),
+ *   id = "openagenda_favorites_filter_block",
+ *   admin_label = @Translation("OpenAgenda - Favorites filter"),
  *   category = @Translation("OpenAgenda"),
  *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   },
  * )
  */
-class OpenagendaRelativeFilterBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class OpenagendaFavoritesFilterBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The OpenAgenda helper service.
@@ -77,12 +77,9 @@ class OpenagendaRelativeFilterBlock extends BlockBase implements ContainerFactor
     // Check that we have an OpenAgenda node and that we are hitting the base
     // route (not an event).
     if ($node && $node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
-      // Only display if agenda current option is not selected.
-      if (empty($node->get('field_openagenda')->current)) {
-        $block = [
-          '#theme' => 'block__openagenda_relative_filter',
-        ];
-      }
+      $block = [
+        '#theme' => 'block__openagenda_favorites_filter',
+      ];
     }
 
     return $block;

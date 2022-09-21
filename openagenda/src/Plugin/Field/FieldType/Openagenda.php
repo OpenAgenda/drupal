@@ -24,8 +24,7 @@ class Openagenda extends FieldItemBase
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldStorageDefinitionInterface $field_definition)
-  {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return [
       'columns' => [
         'uid' => [
@@ -45,7 +44,18 @@ class Openagenda extends FieldItemBase
           'size' => 'tiny',
           'not null' => TRUE,
         ],
+        'general_prefilter' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ],
         'include_embedded' => [
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'current' => [
           'type' => 'int',
           'size' => 'tiny',
           'not null' => TRUE,
@@ -58,8 +68,7 @@ class Openagenda extends FieldItemBase
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition)
-  {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['uid'] = DataDefinition::create('string')
       ->setLabel(t('OpenAgenda UID'))
       ->setRequired(TRUE);
@@ -72,8 +81,16 @@ class Openagenda extends FieldItemBase
       ->setLabel(t('Agenda language'))
       ->setRequired(FALSE);
 
+    $properties['general_prefilter'] = DataDefinition::create('string')
+      ->setLabel(t('General pre-filter'))
+      ->setRequired(FALSE);
+
     $properties['include_embedded'] = DataDefinition::create('boolean')
       ->setLabel(t('Include embedded content'))
+      ->setRequired(FALSE);
+
+    $properties['current'] = DataDefinition::create('boolean')
+      ->setLabel(t('Only current and upcoming events'))
       ->setRequired(FALSE);
 
     return $properties;
@@ -82,8 +99,7 @@ class Openagenda extends FieldItemBase
   /**
    * {@inheritdoc}
    */
-  public function isEmpty()
-  {
+  public function isEmpty() {
     $value = $this->get('uid')->getValue();
     return $value === NULL || $value === '';
   }

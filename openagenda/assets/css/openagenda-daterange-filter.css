@@ -163,6 +163,7 @@
     flex-basis: 14.285% !important;
   }
 }
+
 .rdrSelected,
 .rdrInRange,
 .rdrStartEdge,
@@ -670,26 +671,23 @@
   right: 2px;
 }
 
-.rdrNoSelection .rdrSelected, .rdrNoSelection .rdrInRange, .rdrNoSelection .rdrStartEdge, .rdrNoSelection .rdrEndEdge {
+.rdrNoSelection .rdrSelected,
+.rdrNoSelection .rdrInRange,
+.rdrNoSelection .rdrStartEdge,
+.rdrNoSelection .rdrEndEdge {
   background: #fff;
 }
+
 .rdrNoSelection .rdrDay:not(.rdrDayPassive) .rdrInRange ~ .rdrDayNumber span,
 .rdrNoSelection .rdrDay:not(.rdrDayPassive) .rdrStartEdge ~ .rdrDayNumber span,
 .rdrNoSelection .rdrDay:not(.rdrDayPassive) .rdrEndEdge ~ .rdrDayNumber span,
 .rdrNoSelection .rdrDay:not(.rdrDayPassive) .rdrSelected ~ .rdrDayNumber span {
   color: #413a42;
 }
+
 .rdrNoSelection .rdrDay:not(.rdrDayPassive) .rdrInRange ~ .rdrDayNumber span:after,
 .rdrNoSelection .rdrDay:not(.rdrDayPassive) .rdrStartEdge ~ .rdrDayNumber span:after,
 .rdrNoSelection .rdrDay:not(.rdrDayPassive) .rdrEndEdge ~ .rdrDayNumber span:after,
 .rdrNoSelection .rdrDay:not(.rdrDayPassive) .rdrSelected ~ .rdrDayNumber span:after {
   background: #41acdd;
-}
-
-.oa-filter-total {
-  margin-left: 4px;
-}
-
-.map-container .leaflet-container {
-  height: 180px;
 }

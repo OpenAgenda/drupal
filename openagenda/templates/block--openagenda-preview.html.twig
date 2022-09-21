@@ -1,3 +1,18 @@
+{#
+/**
+ * @file
+ * Default theme implementation for event preview block.
+ *
+ * Available variables:
+ * - agenda_uid: the agenda uid.
+ * - search_string: the search link including filters parameters.
+ *
+ * @see template_preprocess_block()
+ *
+ * @ingroup themeable
+ */
+#}
+
 <div id="oa-wrapper" class="oa-agenda oa-agenda--preview">
   <ul class="oa-list oa-list--x{{ columns }}">
     {% for event in events %}
@@ -12,13 +27,6 @@
             </header>
             <h2 class="oa-event-title"><a class="oa-event-permalink" href="{{ event.local_url }}">{{ event.title }}</a></h2>
             <div class="oa-event__content">
-              {% if event.keywords is not null and event.keywords|length > 0 %}
-                <ul class="oa-event-keywords">
-                  {% for keyword in event.keywords %}
-                    <li class="oa-event-keyword"><a href="{{ path('entity.node.canonical', {'node':  entity.id, 'search' : keyword}) }}">#{{ keyword }}</a></li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
               <div class="oa-event-daterange">{{ event.dateRange }}</div>
               <p class="oa-event-description oa-event-description--short">{{ event.description }}</p>
             </div>

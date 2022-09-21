@@ -76,12 +76,12 @@ class OpenagendaDaterangeFilterBlock extends BlockBase implements ContainerFacto
 
     // Check that we have an OpenAgenda node and that we are hitting the base
     // route (not an event).
-    if ($node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
+    if ($node && $node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
       $lang = $this->helper->getPreferredLanguage($node->get('field_openagenda')->language);
       $agenda_uid = $node->get('field_openagenda')->uid;
 
       $block = [
-        '#theme' => 'openagenda_daterange_filter',
+        '#theme' => 'block__openagenda_daterange_filter',
         '#agenda_uid' => $agenda_uid,
         '#lang' => $lang,
       ];

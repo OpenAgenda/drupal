@@ -1,0 +1,27 @@
+<?php
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Add general prefilter field to openagenda node.
+ * Add current option to openagenda node.
+ */
+function openagenda_update_9001(&$sandbox = NULL) {
+  $general_prefilter = [
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+  ];
+  $current = [
+    'type' => 'int',
+    'size' => 'tiny',
+    'not null' => TRUE,
+    'default' => 0,
+  ];
+
+  $schema = Database::getConnection()->schema();
+  $schema->addField('node__field_openagenda', 'field_openagenda_general_prefilter', $general_prefilter);
+  $schema->addField('node_revision__field_openagenda', 'field_openagenda_general_prefilter', $general_prefilter);
+  $schema->addField('node__field_openagenda', 'field_openagenda_current', $current);
+  $schema->addField('node_revision__field_openagenda', 'field_openagenda_current', $current);
+}

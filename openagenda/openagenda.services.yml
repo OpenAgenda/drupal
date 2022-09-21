@@ -1,7 +1,7 @@
 services:
   openagenda.connector:
     class: Drupal\openagenda\OpenagendaConnector
-    arguments: ['@request_stack']
+    arguments: ['@config.factory', '@request_stack']
 
   openagenda.path_processor:
     class: Drupal\openagenda\PathProcessor\OpenagendaPathProcessor

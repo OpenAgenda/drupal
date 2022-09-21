@@ -2,7 +2,6 @@
 
 namespace Drupal\openagenda;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
@@ -16,8 +15,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * Prepares an agenda's data prior to display.
  */
-class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
-{
+class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
   use StringTranslationTrait;
 
   /**
@@ -65,8 +63,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
   /**
    * {@inheritdoc}
    */
-  public function __construct(OpenagendaConnectorInterface $connector, OpenagendaHelperInterface $helper, RequestStack $request_stack, PagerManagerInterface $pager_manager, PagerParametersInterface $pager_parameters)
-  {
+  public function __construct(OpenagendaConnectorInterface $connector, OpenagendaHelperInterface $helper, RequestStack $request_stack, PagerManagerInterface $pager_manager, PagerParametersInterface $pager_parameters) {
     $this->config = \Drupal::config('openagenda.settings');
     $this->connector = $connector;
     $this->helper = $helper;
@@ -85,14 +82,13 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
    *   An agenda's render array or a simple markup to report
    *   that no agenda was found.
    */
-  public function buildRenderArray(EntityInterface $entity)
-  {
+  public function buildRenderArray(EntityInterface $entity, ?bool $reload = FALSE, ?int $page = NULL) {
     if (!$entity->hasField('field_openagenda')) {
       return [];
     }
     // Get request parameters : page.
     $size = (int) $entity->get('field_openagenda')->events_per_page;
-    $from = $this->pagerParameters->findPage() * $size;
+    $from = $page ?? $this->pagerParameters->findPage() * $size;
 
     // Get request filters.
     $queryInfo = UrlHelper::parse($this->requestStack->getCurrentRequest()->getUri());
@@ -100,6 +96,19 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
 
     // Remove pager params.
     unset($filters['page']);
+
+    // Get pre-filters and add them to filters if defined.
+    $preFilters = $this->helper->getPreFilters($entity);
+
+    // Current & upcoming events only.
+    $currentValue = $entity->get('field_openagenda')->current;
+    if (!empty($currentValue)) {
+      $preFilters['relative'] = [
+        'current',
+        'upcoming',
+      ];
+    }
+    $filters += $preFilters;
 
     // Get events.
     $agenda_uid = $entity->get('field_openagenda')->uid;
@@ -109,8 +118,16 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
     // Success ?
     if (isset($data['success']) && $data['success'] == FALSE) {
       return [
-        '#markup' => $this->t("This OpenAgenda doesn't exist."),
+        '#markup' => $this->t("This agenda doesn't exist."),
       ];
+    }
+
+    // Security if page is higher than page count.
+    $total = !empty($data['total']) ? $data['total'] : 0;
+    if ($from > $total) {
+      $page = floor(($total - 1) / $size) + 1;
+
+      return $this->buildRenderArray($entity, FALSE, $page);
     }
 
     // Localize events.
@@ -127,7 +144,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
       '#theme' => 'openagenda_agenda',
       '#entity' => $entity,
       '#events' => !empty($data['events']) ? $data['events'] : [],
-      '#total' => !empty($data['total']) ? $data['total'] : 0,
+      '#total' => $total,
       '#from' => $from,
       '#lang' => $language,
       '#columns' => $this->config->get('openagenda.default_columns', 3),
@@ -142,19 +159,20 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
             'lang' => $language,
             'ajaxUrl' => base_path() . Url::fromRoute('openagenda.ajax', ['node' => $nid])->getInternalPath(),
             'filtersUrl' => base_path() . Url::fromRoute('openagenda.filters', ['node' => $nid])->getInternalPath(),
+            'preFilters' => $preFilters,
           ],
-        ]
+        ],
       ],
     ];
 
-    // Defaut style library ?
-    if ($default_style = $this->config->get('openagenda.default_style')) {
-      $build['#attached']['library'][] = 'openagenda/openagenda.' . $default_style;
+    if (!$reload) {
+      $style = $this->config->get('openagenda.default_style', 'default');
+      $build['#attached']['library'][] = 'openagenda/openagenda.style.' . $style;
     }
 
     // Add pager if needed.
     if (!empty($data['total'])) {
-      $this->pagerManager->createPager($data['total'], $size);
+      $this->pagerManager->createPager($total, $size);
       $build['#pager'] = ['#type' => 'pager'];
     }
 

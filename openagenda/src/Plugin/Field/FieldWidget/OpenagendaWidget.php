@@ -9,6 +9,7 @@ use Drupal\openagenda\OpenAgendaHelperInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use \Drupal;
 
 /**
  * Widget for the OpenAgenda field type.
@@ -44,7 +45,7 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, OpenagendaHelperInterface $helper) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
     $this->helper = $helper;
-    $this->config = \Drupal::config('openagenda.settings');
+    $this->config = Drupal::config('openagenda.settings');
   }
 
   /**
@@ -86,6 +87,23 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
       '#size' => 3,
       '#min' => 0,
       '#max' => 300,
+    ];
+
+    $element['current'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Only current and upcoming events'),
+      '#description' => $this->t('Display only current and upcoming events. If relative date filter block is configured to be displayed on agenda page, it will be disactivated on this openagenda node page.'),
+      '#return_value' => TRUE,
+      '#default_value' => isset($items[$delta]->current) ? $items[$delta]->current : ($this->config->get('openagenda.current') ?? FALSE),
+    ];
+
+    $element['general_prefilter'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('General pre-filter'),
+      '#description' => $this->t('Present a subset of the agenda on your page by defining this pre-filter. Set the desired filter either on the calendar events administration page on openagenda.com or on the public calendar page on your Drupal site. The URL of the page then contains the value of the filter to define. Retrieve the full URL defined in the address bar of your browser and place it in this field.'),
+      '#size' => 60,
+      '#maxlength' => 255,
+      '#default_value' => isset($items[$delta]->general_prefilter) ? $items[$delta]->general_prefilter : '',
     ];
 
     $language_options = ['default' => $this->t("Use site's language")] + $this->helper->getAvailableLanguages();

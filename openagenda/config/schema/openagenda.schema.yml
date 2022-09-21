@@ -26,5 +26,3 @@ openagenda.settings:
         default_search_filter_placeholder:
           type: label
           label: 'Default search filter placeholder'
-        
-        

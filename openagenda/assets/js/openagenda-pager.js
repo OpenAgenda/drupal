@@ -3,7 +3,7 @@
  * Contains the definition of the OpenAgenda pager behaviour.
  */
 
- (function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
 
   'use strict';
 
@@ -15,23 +15,22 @@
       }
 
       // Pager navigation.
-      $( 'body' ).on( 'click', '#oa-wrapper .pager a', function( event ) {
+      $('body').on('click', '#oa-wrapper .pager__link', (event) => {
         event.preventDefault();
-        let ajaxUrl = 'openagenda/' + drupalSettings.openagenda.nid + '/ajax';
+        event.stopPropagation();
+        const link = $(event.target);
+        let ajaxUrl = 'openagenda/' + drupalSettings.openagenda.nid + '/ajax' + link.attr('href');
+        let urlSearchParams = new URLSearchParams(ajaxUrl);
 
-        if (!$(this).closest( '.pager__item' ).hasClass('is-active')) {
-          ajaxUrl += $(this).attr('href');
+        // Show Ajax Throbber, automatically removed when content is replaced/page reloaded.
+        $('#oa-wrapper').append(Drupal.theme.ajaxProgressIndicatorFullscreen());
 
-          // Show Ajax Throbber, automagically removed when content is replaced/page reloaded.
-          $( '#oa-wrapper' ).append(Drupal.theme.ajaxProgressIndicatorFullscreen());
-
-          // Ajax query execution.
-          Drupal.ajax({
-            url: Drupal.url(ajaxUrl),
-          }).execute().done(function() {
-            document.getElementById('oa-wrapper').scrollIntoView();
-          });
-        }
+        // Ajax query execution.
+        Drupal.ajax({
+          url: Drupal.url(ajaxUrl),
+        }).execute().done(() => {
+          document.getElementById('oa-wrapper').scrollIntoView();
+        });
       });
     }
   };
