@@ -16,6 +16,8 @@
 
       const ajaxUrl = drupalSettings.openagenda.ajaxUrl;
       const filtersUrl = drupalSettings.openagenda.filtersUrl;
+      const preFilters = drupalSettings.openagenda.preFilters;
+      const agenda = document.querySelector('.oa-agenda');
 
       // window.oa.
       if (typeof window.oa === 'undefined') {
@@ -31,47 +33,83 @@
             }
           },
           res: drupalSettings.openagenda.filtersUrl,
+          filtersRef: null,
+          values: null,
+          queryParams: null,
           onLoad: async (values, aggregations, filtersRef, _form) => {
-            values.size = 0;
-            const queryParams = {...values, aggregations};
+            oa.filtersRef = filtersRef;
+            oa.values = values;
+            let queryParams = {...values, aggregations};
+            oa.queryParams = queryParams;
+            computeQueryParams(preFilters,true);
 
-            // Get events with ajax to update filters.
-            $.ajax({
-              url: filtersUrl + '?' + $.param(queryParams),
-              type: 'GET',
-              dataType: 'json',
-              success(result) {
-                // Update widgets.
-                filtersRef.updateFiltersAndWidgets(values, result);
-              },
-            });
+            // Update filters and widgets.
+            oa.updateFiltersAndWidgets();
           },
           onFilterChange: async (values, aggregations, filtersRef, _form) => {
-            // Ajax Drupal add.
-            const queryParams = {...values, aggregations};
+            oa.filtersRef = filtersRef;
+            oa.values = values;
+            let queryParams = {...values, aggregations};
+            oa.queryParams = queryParams;
+            computeQueryParams(preFilters,false);
 
             // Show Ajax Throbber, automatically removed when content is replaced/page reloaded.
-            $( '#oa-wrapper' ).append('<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>');
+            $('#oa-wrapper').append(Drupal.theme.ajaxProgressIndicatorFullscreen());
 
-            // Ajax query execution.
+            // Load event then update filters.
             Drupal.ajax({
-              url: ajaxUrl + '?' + $.param(queryParams)
+              url: ajaxUrl + '?' + $.param(oa.queryParams)
             }).execute();
-
-            // Get events with ajax to update filters.
+          },
+          updateFiltersAndWidgets: async () => {
+            // Update location, filters & widgets.
+            if (!oa.filtersRef) {
+              return;
+            }
             $.ajax({
-              url: filtersUrl + '?' + $.param(queryParams),
+              url: filtersUrl + '?' + $.param(oa.queryParams),
               type: 'GET',
               dataType: 'json',
-              success(result) {
-                // Update location & widgets.
-                filtersRef.updateLocation(values);
-                filtersRef.updateFiltersAndWidgets(values, result);
-              },
+              async: false,
+              complete: (data) => {
+                oa.filtersRef.updateFiltersAndWidgets(oa.values, data.responseJSON);
+                oa.filtersRef.updateLocation(oa.values);
+              }
             });
           }
         };
       }
+
+      // Agenda mutation observer.
+      if (agenda !== undefined) {
+        const observer = new MutationObserver((mutations, observer) => {
+          oa.updateFiltersAndWidgets();
+        });
+        observer.observe(agenda, {
+          subtree: true,
+          attributes: true,
+        });
+      }
+
+      // Mix preFilters & oa queryParams/values.
+      const computeQueryParams = (preFilters, onLoad) => {
+        let preFiltersEntries =  Object.entries(preFilters);
+
+        // Apply preFilters.
+        preFiltersEntries.forEach((preFilter) => {
+          if (!oa.queryParams[preFilter[0]] || onLoad) {
+            oa.queryParams[preFilter[0]] = preFilter[1];
+            oa.values[preFilter[0]] = preFilter[1];
+          }
+        });
+
+        // Do not apply relative filter if timing filter is used.
+        if (oa.queryParams['timings'] && oa.queryParams['relative']) {
+          oa.queryParams['relative'] = undefined;
+          oa.values['relative'] = undefined;
+        }
+      }
+
     }
   };
 })(jQuery, Drupal, drupalSettings);

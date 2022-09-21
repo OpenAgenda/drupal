@@ -3,7 +3,19 @@
     "description": "Integrates OpenAgenda.",
     "type": "drupal-module",
     "license": "GPL-2.0+",
+    "homepage": "https://drupal.org/project/openagenda",
+    "authors": [
+        {
+            "name": "Hermann Sorais (hermann_sorais)",
+            "homepage": "https://www.drupal.org/u/hermann_sorais",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://drupal.org/project/issues/openagenda",
+        "source": "https://git.drupalcode.org/project/openagenda"
+    },
     "require": {
-        "openagenda/sdk-php": ">=1.0.0"
+        "openagenda/sdk-php": ">=1.3.0"
     }
 }

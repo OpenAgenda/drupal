@@ -162,6 +162,9 @@ msgstr "Langue"
 msgid "The language to use for this OpenAgenda."
 msgstr "La langue à utiliser pour cet OpenAgenda."
 
+msgid "This agenda doesn't exist."
+msgstr "Cet agenda n'existe pas."
+
 msgid "Displays an OpenAgenda."
 msgstr "Affiche un agenda OpenAgenda."
 
@@ -192,6 +195,15 @@ msgstr "OpenAgenda - Filtre dates relatives"
 msgid "OpenAgenda - Search filter"
 msgstr "OpenAgenda - Filtre de recherche"
 
+msgid "OpenAgenda - Keywords filter"
+msgstr "OpenAgenda - Filtre mots-clés"
+
+msgid "OpenAgenda - Favorites filter"
+msgstr "OpenAgenda - Filtre favoris"
+
+msgid "OpenAgenda - Additional field filter"
+msgstr "OpenAgenda - Filtre champ additionnel"
+
 msgid "OpenAgenda - Total results block"
 msgstr "OpenAgenda - Bloc total des résultats"
 
@@ -216,9 +228,6 @@ msgstr "Filtres"
 msgid "Paste the URL of this OpenAgenda with corresponding filters set."
 msgstr "Coller l'URL complet de l'OpenAgenda avec les filtres correspondants."
 
-msgid "Paste the URL of this OpenAgenda with corresponding filters set."
-msgstr "Coller l'URL complet de l'OpenAgenda avec les filtres correspondants."
-
 msgid "Placeholder for the input field."
 msgstr "Placeholder du champ de recherche."
 
@@ -228,5 +237,65 @@ msgstr "Configuration OpenAgenda"
 msgid "Configure settings for the OpenAgenda module."
 msgstr "Configuration par défaut du module OpenAgenda."
 
-msgid "There are no events with these search parameters."
+msgid "There are no event matching these search parameters."
 msgstr "Il n'y a aucun résultat correspondant à vos filtres de recherche."
+
+msgid "Favorites : add or remove"
+msgstr "Favoris : ajouter ou supprimer."
+
+msgid "Favorites."
+msgstr "Favoris."
+
+msgid "Favorites"
+msgstr "Favoris"
+
+msgid ""
+"Agenda (uid: %value) doesn't exist or you don't have permission to "
+"access this agenda. You may also check OpenAgenda key configuration."
+msgstr ""
+"L'agenda (uid: %value) n'existe pas ou vous n'avez pas la permission "
+"d'accéder à cet agenda. Veuillez également vérifier la configuration de votre "
+"clé publique OpenAgenda."
+
+msgid "Additional field"
+msgstr "Champ additionnel"
+
+msgid "Agenda additional field name"
+msgstr "Nom du champ additionnel OpenAgenda"
+
+msgid "This additional field doesn't belong to any of your agenda(s)!"
+msgstr "Ce champ additionnel n'est configuré dans aucun de vos agenda OpenAgenda !"
+
+msgid "Your OpenAgenda public key is not recognized."
+msgstr "Votre clé publique n'a pas été reconnue."
+
+msgid ""
+"Display only current and upcoming events. If relative date filter block is configured to be displayed on agenda "
+"page, it will be disactivated on every openagenda node page."
+msgstr ""
+"N'afficher que les événements en cours et à venir. Si sélectionné, chaque bloc de type OpenAgenda - Filtre dates "
+"relatives sera désactivé sur l'ensemble des agendas."
+
+msgid ""
+"Display only current and upcoming events. If relative date filter block is configured to be displayed on agenda "
+"page, it will be disactivated on every openagenda node page."
+msgstr ""
+"N'afficher que les événements en cours et à venir. Si sélectionné, chaque bloc de type OpenAgenda - Filtre dates "
+"relatives sera désactivé sur la page de cet agenda."
+
+msgid "Only current and upcoming events"
+msgstr "Limiter aux événements en cours et à venir"
+
+msgid "General pre-filter"
+msgstr "Préfiltre général"
+
+msgid ""
+"Present a subset of the agenda on your page by defining this pre-filter. Set the desired filter either on the "
+"calendar events administration page on openagenda.com or on the public calendar page on your Drupal site. The URL "
+"of the page then contains the value of the filter to define. Retrieve the full URL defined in the address bar of "
+"your browser and place it in this field."
+msgstr ""
+"Présentez un sous ensemble de l'agenda sur votre page en définissant un préfiltre. Définissez le filtre "
+"souhaité soit sur la page d'administration des événements de l'agenda sur openagenda.com ou sur la page publique "
+"de l'agenda sur votre site Drupal. L'URL de la page contient alors la valeur du filtre à définir. Récupérez "
+"l'URL complet définit dans la barre d'adresse de votre navigateur et placez-la dans ce champ."

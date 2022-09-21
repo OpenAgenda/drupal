@@ -21,13 +21,14 @@ interface OpenagendaConnectorInterface {
    * @param int $size
    *   Number of events to get.
    * @param string $sort
-   *   Event sort parameter. One of the following values:
+   *   Event sort parameter. One of the following values.
    *      - timingsWithFeatured.asc
    *      - timings.asc
    *      - updatedAt.desc
    *      - updatedAt.asc
    * @param bool $include_embedded
    *   Wether include embedded code in event html or not.
+   *
    * @return array|mixed
    *   Data from the OpenAgenda server, including an event array.
    */

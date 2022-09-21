@@ -1,3 +1,18 @@
+{#
+/**
+ * @file
+ * Displays an event in a list.
+ *
+ * Available variables:
+ * - event: the event.
+ * - relative_timing: relative timing of the event.
+ *
+ * @see template_preprocess_block()
+ *
+ * @ingroup themeable
+ */
+#}
+
 <article id="event--{{ event.uid }}" class="oa-event oa-event--list">
   <div class="oa-event__wrapper">
     <header class="oa-event__header">
@@ -6,16 +21,15 @@
       {% if event.location.city is not null and event.location.city != '' %}
         <div class="oa-event-location">{{ event.location.city }}</div>
       {% endif %}
+      <div
+        class="checkbox oa-event-favorite"
+        data-oa-widget="favorites_{{ event.uid }}"
+        data-oa-widget-params="{&quot;eventUid&quot;:&quot;{{ event.uid }}&quot;,&quot;name&quot;:&quot;favorite&quot;}">
+        <span>{{ 'Favorites: add or remove'|t }}</span>
+      </div>
     </header>
     <h2 class="oa-event-title"><a class="oa-event-permalink" href="{{ event.local_url }}">{{ event.title }}</a></h2>
     <div class="oa-event__content">
-      {% if event.keywords is not null and event.keywords|length > 0 %}
-        <ul class="oa-event-keywords">
-          {% for keyword in event.keywords %}
-            <li class="oa-event-keyword"><a href="{{ path('entity.node.canonical', {'node':  entity.id, 'search' : keyword}) }}">#{{ keyword }}</a></li>
-          {% endfor %}
-        </ul>
-      {% endif %}
       <div class="oa-event-daterange">{{ event.dateRange }}</div>
       <p class="oa-event-description oa-event-description--short">{{ event.description }}</p>
     </div>

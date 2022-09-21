@@ -10,6 +10,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\openagenda\OpenagendaHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use \Drupal;
 
 /**
  * Provides the OpenAgenda search filter Block.
@@ -53,7 +54,7 @@ class OpenagendaSearchFilterBlock extends BlockBase implements ContainerFactoryP
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
     $this->helper = $helper;
-    $this->moduleConfig = \Drupal::config('openagenda.settings');
+    $this->moduleConfig = Drupal::config('openagenda.settings');
   }
 
   /**
@@ -111,11 +112,12 @@ class OpenagendaSearchFilterBlock extends BlockBase implements ContainerFactoryP
 
     // Check that we have an OpenAgenda node and that we are hitting the base
     // route (not an event).
-    if ($node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
+    if ($node && $node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
       $lang = $this->helper->getPreferredLanguage($node->get('field_openagenda')->language);
-      $placeholder = !empty($this->configuration['input_placeholder']) ? $this->configuration['input_placeholder'] : $this->t($this->moduleConfig->get('openagenda.default_search_filter_placeholder'));
+      $defaultPlaceholder = $this->moduleConfig->get('openagenda.default_search_filter_placeholder');
+      $placeholder = !empty($this->configuration['input_placeholder']) ? $this->configuration['input_placeholder'] : $this->t($defaultPlaceholder);
       $block = [
-        '#theme' => 'openagenda_search_filter',
+        '#theme' => 'block__openagenda_search_filter',
         '#placeholder' => $placeholder,
         '#lang' => $lang,
       ];

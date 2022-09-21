@@ -1,0 +1,38 @@
+{#
+/**
+ * @file
+ * Default theme implementation for event preview block.
+ *
+ * Available variables:
+ * - agenda_uid: the agenda uid.
+ * - search_string: the search link including filters parameters.
+ *
+ * @see template_preprocess_block()
+ *
+ * @ingroup themeable
+ */
+#}
+
+<div id="oa-wrapper" class="oa-agenda oa-agenda--preview">
+  <ul class="oa-list oa-list--x{{ columns }}">
+    {% for event in events %}
+      <li class="oa-list__item">
+        <div id="event--{{ event.uid }}" class="oa-event oa-event--list">
+          <div class="oa-event__wrapper">
+            <header class="oa-event__header">
+              <a href="{{ event.local_url }}"><div class="oa-event-thumbnail"{% if event.image %} style="background-image: url({{ event.image.base ~ event.image.filename }})"{% endif %}></div></a>
+              {% if event.location.city is not null and event.location.city != '' %}
+                <div class="oa-event-location">{{ event.location.city }}</div>
+              {% endif %}
+            </header>
+            <h2 class="oa-event-title"><a class="oa-event-permalink" href="{{ event.local_url }}">{{ event.title }}</a></h2>
+            <div class="oa-event__content">
+              <div class="oa-event-daterange">{{ event.dateRange }}</div>
+              <p class="oa-event-description oa-event-description--short">{{ event.description }}</p>
+            </div>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

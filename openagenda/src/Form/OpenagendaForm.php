@@ -54,6 +54,7 @@ class OpenagendaForm extends ConfigFormBase {
       '#title' => $this->t('OpenAgenda public key'),
       '#description' => $this->t('Enter your OpenAgenda account public key.'),
       '#default_value' => $config->get('openagenda.public_key'),
+      '#required' => TRUE,
     ];
 
     $form['default_openagenda_settings'] = [
@@ -89,6 +90,14 @@ class OpenagendaForm extends ConfigFormBase {
       '#default_value' => $config->get('openagenda.include_embedded'),
     ];
 
+    $form['default_openagenda_settings']['current'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Only current and upcoming events'),
+      '#description' => $this->t('Display only current and upcoming events. If relative date filter block is configured to be displayed on agenda page, it will be disactivated on every openagenda node page.'),
+      '#return_value' => TRUE,
+      '#default_value' => $config->get('openagenda.current'),
+    ];
+
     $form['default_openagenda_display'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Default OpenAgenda display settings'),
@@ -99,7 +108,7 @@ class OpenagendaForm extends ConfigFormBase {
       '#title' => $this->t('OpenAgenda default style'),
       '#options' => [
         'agenda' => $this->t('OpenAgenda'),
-        -1 => $this->t('None'),
+        "default" => $this->t('None'),
       ],
       '#default_value' => $config->get('openagenda.default_style'),
     ];
@@ -153,24 +162,20 @@ class OpenagendaForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('openagenda.settings');
     $config->set('openagenda.public_key', $form_state->getValue('public_key'));
     $config->set('openagenda.events_per_page', $form_state->getValue('events_per_page'));
     $config->set('openagenda.default_language', $form_state->getValue('default_language'));
     $config->set('openagenda.include_embedded', $form_state->getValue('include_embedded'));
+      $config->set('openagenda.current', $form_state->getValue('current'));
     $config->set('openagenda.default_style', $form_state->getValue('default_style'));
     $config->set('openagenda.default_columns', $form_state->getValue('default_columns'));
     $config->set('openagenda.default_map_filter_tiles_uri', $form_state->getValue('default_map_filter_tiles_uri'));
     $config->set('openagenda.default_map_filter_tiles_attribution', $form_state->getValue('default_map_filter_tiles_attribution'));
     $config->set('openagenda.default_search_filter_placeholder', $form_state->getValue('default_search_filter_placeholder'));
     $config->save();
+
     return parent::submitForm($form, $form_state);
   }
 

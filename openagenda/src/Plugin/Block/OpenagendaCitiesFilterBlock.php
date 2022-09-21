@@ -76,9 +76,9 @@ class OpenagendaCitiesFilterBlock extends BlockBase implements ContainerFactoryP
 
     // Check that we have an OpenAgenda node and that we are hitting the base
     // route (not an event).
-    if ($node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
+    if ($node && $node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
       $block = [
-        '#theme' => 'openagenda_cities_filter',
+        '#theme' => 'block__openagenda_cities_filter',
       ];
     }
 

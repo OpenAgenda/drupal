@@ -2,9 +2,10 @@
 
 namespace Drupal\openagenda;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Pager\PagerManagerInterface;
+use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -14,8 +15,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * Prepares an agenda's data prior to display.
  */
-class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
-{
+class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
   use StringTranslationTrait;
 
   /**
@@ -63,8 +63,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
   /**
    * {@inheritdoc}
    */
-  public function __construct(OpenagendaConnectorInterface $connector, OpenagendaHelperInterface $helper, RequestStack $request_stack)
-  {
+  public function __construct(OpenagendaConnectorInterface $connector, OpenagendaHelperInterface $helper, RequestStack $request_stack) {
     $this->config = \Drupal::config('openagenda.settings');
     $this->connector = $connector;
     $this->helper = $helper;
@@ -81,8 +80,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
    *   An agenda's render array or a simple markup to report
    *   that no agenda was found.
    */
-  public function buildRenderArray(EntityInterface $entity)
-  {
+  public function buildRenderArray(EntityInterface $entity, $reload = FALSE, $page = NULL) {
     if (!$entity->hasField('field_openagenda')) {
       return [];
     }
@@ -105,8 +103,16 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
     // Success ?
     if (isset($data['success']) && $data['success'] == FALSE) {
       return [
-        '#markup' => $this->t("This OpenAgenda doesn't exist."),
+        '#markup' => $this->t("This agenda doesn't exist."),
       ];
+    }
+
+    // Security if page is higher than page count.
+    $total = !empty($data['total']) ? $data['total'] : 0;
+    if ($from > $total) {
+      $page = floor(($total - 1) / $size) + 1;
+
+      return $this->buildRenderArray($entity, FALSE, $page);
     }
 
     // Localize events.
@@ -123,7 +129,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
       '#theme' => 'openagenda_agenda',
       '#entity' => $entity,
       '#events' => !empty($data['events']) ? $data['events'] : [],
-      '#total' => !empty($data['total']) ? $data['total'] : 0,
+      '#total' => $total,
       '#from' => $from,
       '#lang' => $language,
       '#columns' => $this->config->get('openagenda.default_columns', 3),
@@ -139,13 +145,13 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface
             'ajaxUrl' => base_path() . Url::fromRoute('openagenda.ajax', ['node' => $nid])->getInternalPath(),
             'filtersUrl' => base_path() . Url::fromRoute('openagenda.filters', ['node' => $nid])->getInternalPath(),
           ],
-        ]
+        ],
       ],
     ];
 
-    // Defaut style library ?
-    if ($default_style = $this->config->get('openagenda.default_style')) {
-      $build['#attached']['library'][] = 'openagenda/openagenda.' . $default_style;
+    if (!$reload) {
+      $style = $this->config->get('openagenda.default_style', 'default');
+      $build['#attached']['library'][] = 'openagenda/openagenda.style.' . $style;
     }
 
     // Add pager if needed.

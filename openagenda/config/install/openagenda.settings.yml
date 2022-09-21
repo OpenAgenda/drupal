@@ -3,8 +3,10 @@ openagenda:
   events_per_page: 20
   default_language: 'default'
   include_embedded: FALSE
+  current: FALSE
   default_style: 'agenda'
   default_columns: 3
   default_map_filter_tiles_uri: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
   default_map_filter_tiles_attribution: 'OpenStreetMap contributors'
   default_search_filter_placeholder: 'Search in this agenda'
+

@@ -20,8 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class OpenagendaFormatter extends FormatterBase implements ContainerFactoryPluginInterface
-{
+class OpenagendaFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
   /**
    * The agenda processor service.
@@ -33,18 +32,17 @@ class OpenagendaFormatter extends FormatterBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function settingsSummary()
-  {
+  public function settingsSummary() {
     $summary = [];
     $summary[] = $this->t('Displays the OpenAgenda.');
+
     return $summary;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
-  {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $plugin_id,
       $plugin_definition,
@@ -60,8 +58,7 @@ class OpenagendaFormatter extends FormatterBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, OpenagendaAgendaProcessorInterface $agenda_processor)
-  {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, OpenagendaAgendaProcessorInterface $agenda_processor) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 
     $this->agendaProcessor = $agenda_processor;
@@ -70,8 +67,7 @@ class OpenagendaFormatter extends FormatterBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items, $langcode)
-  {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = [];
 
     foreach ($items as $delta => $item) {

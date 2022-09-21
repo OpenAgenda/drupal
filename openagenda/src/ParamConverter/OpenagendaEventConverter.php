@@ -17,21 +17,21 @@ class OpenagendaEventConverter implements ParamConverterInterface {
   /**
    * Our OpenAgendaConnector service.
    *
-   * @var \Drupal\openagenda\OpenagendaConnectorInterface
+   * @var \Drupal\openagenda\OpenagendaConnectorInterface $connector
    */
   protected $connector;
 
   /**
    * The event processor service.
    *
-   * @var OpenagendaEventProcessorInterface
+   * @var \Drupal\openagendaOpenagendaEventProcessorInterface
    */
   protected $eventProcessor;
 
   /**
    * The OpenAgenda helper service.
    *
-   * @var OpenAgendaHelperInterface
+   * @var \Drupal\openagenda\OpenAgendaHelperInterface
    */
   protected $helper;
 
@@ -45,11 +45,11 @@ class OpenagendaEventConverter implements ParamConverterInterface {
   /**
    * OpenagendaEventConverter constructor.
    *
-   * @param OpenAgendaConnectorInterface $connector
+   * @param \Drupal\openagenda\OpenagendaConnectorInterface $connector
    *   The OpenAgenda connector service.
-   * @param OpenagendaEventProcessorInterface $event_processor
+   * @param \Drupal\openagenda\OpenagendaEventProcessorInterface $event_processor
    *   The event processor service.
-   * @param OpenAgendaHelperInterface $helper
+   * @param \Drupal\openagenda\OpenAgendaHelperInterface $helper
    *   The OpenAgenda helper service.
    * @param RequestStack $request_stack
    *   The request stack.
