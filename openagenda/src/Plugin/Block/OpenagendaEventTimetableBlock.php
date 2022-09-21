@@ -78,11 +78,11 @@ class OpenagendaEventTimetableBlock extends BlockBase implements ContainerFactor
     $event = $this->routeMatch->getParameter('event');
 
     // Check we have an event and the current node is a valid OpenAgenda node.
-    if (!empty($event) && $entity->hasField('field_openagenda')) {
+    if (!empty($event) && $entity && $entity->hasField('field_openagenda')) {
       $lang = $this->helper->getPreferredLanguage($entity->get('field_openagenda')->language);
 
       $block = [
-        '#theme' => 'openagenda_event_timetable',
+        '#theme' => 'block__openagenda_event_timetable',
         '#event' => $event,
         '#lang' => $lang,
       ];
@@ -93,6 +93,7 @@ class OpenagendaEventTimetableBlock extends BlockBase implements ContainerFactor
 
   /**
    * @return int
+   *   Cache max age.
    */
   public function getCacheMaxAge() {
     return 0;

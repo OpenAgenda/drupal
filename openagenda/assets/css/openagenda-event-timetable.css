@@ -36,7 +36,8 @@
   text-transform: capitalize;
 }
 
-.timings .month-title h4, .timings .month-title i {
+.timings .month-title h4,
+.timings .month-title i {
   display: inline-block;
 }
 
@@ -116,7 +117,8 @@
   margin-left: 0;
 }
 
-.timings.no-js .prev, .timings.no-js .next {
+.timings.no-js .prev,
+.timings.no-js .next {
   display: none;
 }
 

@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "openagenda_cities_filter_block",
  *   admin_label = @Translation("OpenAgenda - Cities filter"),
  *   category = @Translation("OpenAgenda"),
- *   context = {
+ *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   },
  * )
@@ -76,9 +76,9 @@ class OpenagendaCitiesFilterBlock extends BlockBase implements ContainerFactoryP
 
     // Check that we have an OpenAgenda node and that we are hitting the base
     // route (not an event).
-    if ($node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
+    if ($node && $node->hasField('field_openagenda') && $this->routeMatch->getRouteName() == 'entity.node.canonical') {
       $block = [
-        '#theme' => 'openagenda_cities_filter',
+        '#theme' => 'block__openagenda_cities_filter',
       ];
     }
 

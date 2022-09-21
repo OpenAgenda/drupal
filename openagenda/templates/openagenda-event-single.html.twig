@@ -1,3 +1,24 @@
+{#
+/**
+ * @file
+ * Displays an event.
+ *
+ * Available variables:
+ * - event: the event.
+ * - agenda_url: link to the parent agenda.
+ * - index: the index of current event in event list.
+ * - total: event total count.
+ * - previous_event_url: link to previous event.
+ * - next_event_url: link to next event.
+ *
+ * @see template_preprocess_block()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{{ attach_library('openagenda/openagenda.filters') }}
+
 <article id="event-{{ event.uid }}" class="oa-event oa-event--single">
 	<div class="oa-links clearfix">
 		{% if agenda_url %}
@@ -31,17 +52,16 @@
           {% if event.imageCredits %}
             <figcaption>{{ event.imageCredits }}</figcaption>
           {% endif %}
+          <div
+            class="checkbox oa-event-favorite oa-event-favorite--big"
+            data-oa-widget="favorites_{{ event.uid }}"
+            data-oa-widget-params="{&quot;eventUid&quot;:&quot;{{ event.uid }}&quot;,&quot;name&quot;:&quot;favorite&quot;}">
+            <span>{{ 'Favorites: add or remove'|t }}</span>
+          </div>
         </figure>
       {% endif %}
 		</header>
 		<div class="oa-event__content">
-      {% if event.keywords is not null and event.keywords|length > 0 %}
-        <ul class="oa-event-keywords">
-          {% for keyword in event.keywords %}
-            <li class="oa-event-keyword"><a href="{{ path('entity.node.canonical', {'node':  entity.id, 'search' : keyword}) }}">#{{ keyword }}</a></li>
-          {% endfor %}
-        </ul>
-      {% endif %}
       {% if event.location.city is not null and event.location.city != '' %}
         <div class="oa-event-location">{{ event.location.address and event.location.address != '' ? event.location.address : event.location.city }}</div>
       {% endif %}

@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Default theme implementation for custom field filter block.
+ *
+ * Available variables:
+ * - additional_field: additional field name.
+ *
+ * @see template_preprocess_block()
+ *
+ * @ingroup themeable
+ */
+#}
+
+<div class="oa-choice-filter oa-filter" data-oa-filter="{{ additional_field }}" data-oa-filter-params="{&quot;type&quot;:&quot;choice&quot;,&quot;name&quot;:&quot;{{ additional_field }}&quot;,&quot;aggregation&quot;:{&quot;type&quot;:&quot;additionalFields&quot;,&quot;field&quot;:&quot;{{ additional_field }}&quot;,&quot;size&quot;:&quot;2000&quot;},&quot;labelKey&quot;:&quot;label&quot;}"></div>

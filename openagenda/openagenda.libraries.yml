@@ -1,9 +1,14 @@
-openagenda.agenda:
+openagenda.style.agenda:
   js:
     assets/js/openagenda-agenda.js: {}
   css:
     component:
       assets/css/openagenda.css: {}
+
+openagenda.style.default:
+  css:
+    component:
+      assets/css/default.css: {}
 
 openagenda.openagenda-leaflet:
   js:
@@ -28,7 +33,7 @@ openagenda.reactfilters:
     component:
       https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css: { type: external, minified: true }
   js:
-    https://unpkg.com/@openagenda/react-filters@2.4.1/dist/main.js: { type: external, minified: true }
+    https://unpkg.com/@openagenda/react-filters@2.8.3/dist/main.js: { type: external, minified: true }
 
 openagenda.filters:
   js:
@@ -60,4 +65,3 @@ openagenda.event-timetable:
     assets/js/openagenda-event-timetable.js: {}
   dependencies:
     - core/jquery
-

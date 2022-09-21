@@ -34,7 +34,7 @@ interface OpenagendaEventProcessorInterface {
    * @param string $lang
    *   Language code for date format.
    *
-   * @return TranslatableMarkup|null
+   * @return Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   TranslatableMarkup representing relative timing to event.
    */
   public function processRelativeTimingToEvent(array $event, string $lang = 'default');

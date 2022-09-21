@@ -1,15 +1,43 @@
-<div id="oa-wrapper" class="oa-agenda">
-  {% if total and total > 0 %}
-    {% include "openagenda-export-links.html.twig" %}
-  {% else %}
-    {{ 'There are no events with these search parameters.'|t }}
-  {% endif %}
-  <ul class="oa-list oa-list--x{{ columns }}">
-    {% for event in events %}
-      <li class="oa-list__item">
-        {{ event.content }}
-      </li>
-    {% endfor %}
-  </ul>
-  {{ pager }}
+{#
+/**
+ * @file
+ * Displays an agenda.
+ *
+ * Available variables:
+ * - total: total event count.
+ * - columns: column count display setting.
+ * - events: array of agenda events.
+ * - pager: the pager.
+ *
+ * @see template_preprocess_block()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{{ attach_library('openagenda/openagenda.filters') }}
+
+<div id="oa-agenda" class="oa-agenda">
+  <div id="oa-wrapper">
+    {% if total and total > 0 %}
+      <div class="wbg exports">
+        <a
+          role="button"
+          href="https://openagenda.com/agendas/{{ agenda_uid }}/events.v2.xlsx{{ search_string ? '?' ~ search_string }}">xls</a>
+        <a
+          role="button"
+          href="https://openagenda.com/agendas/{{ agenda_uid }}/events.v2.rss{{ search_string ? '?' ~ search_string }}">rss</a>
+      </div>
+    {% else %}
+      {{ 'There are no event matching these search parameters.'|t }}
+    {% endif %}
+    <ul class="oa-list oa-list--x{{ columns }}">
+      {% for event in events %}
+        <li class="oa-list__item">
+          {{ event.content }}
+        </li>
+      {% endfor %}
+    </ul>
+    {{ pager }}
+  </div>
 </div>

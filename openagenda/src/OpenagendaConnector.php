@@ -4,16 +4,15 @@ namespace Drupal\openagenda;
 
 use Drupal\Component\Serialization\Json;
 use OpenAgendaSdk\OpenAgendaSdk;
-use OpenAgendaSdk\OpenAgendaSdkException;
 use Symfony\Component\HttpFoundation\RequestStack;
+use \Drupal;
 
 /**
  * Class OpenagendaConnector.
  *
  * Gets data from the OpenAgenda server.
  */
-class OpenagendaConnector implements OpenagendaConnectorInterface
-{
+class OpenagendaConnector implements OpenagendaConnectorInterface {
 
   /**
    * OpenAgenda SDK.
@@ -38,14 +37,19 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
 
   /**
    * OpenagendaConnector constructor.
+   *
+   * @param ConfigFactoryInterface $config_factory
+   *   The config facory.
    * @param RequestStack $request_stack
+   *  Request stack.
+   *
    * @throws \Exception
    */
-  public function __construct(RequestStack $request_stack)
-  {
+  public function __construct(RequestStack $request_stack) {
     $this->config = \Drupal::config('openagenda.settings');
     $this->sdk = new OpenAgendaSdk($this->config->get('openagenda.public_key', ''));
     $this->requestStack = $request_stack;
+    $this->sdk = new OpenAgendaSdk($this->config->get('openagenda.public_key', ''));
   }
 
   /**
@@ -55,18 +59,18 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
    *   The agenda UID.
    * @param array $params
    *   An array of params for OpenAgenda SDK.
+   *
    * @return array|mixed
    *   Data from the OpenAgenda server, including an event array.
    */
-  protected function getData(string $agenda_uid, array $params = [])
-  {
+  protected function getData(string $agenda_uid, array $params = []) {
     $data = [];
 
     // Make request.
     try {
       $data = Json::decode($this->sdk->getEvents($agenda_uid, $params));
-    } catch (OpenAgendaSdkException $exception) {
-      watchdog_exception('openagenda.connector', $exception);
+    } catch (\Exception $exception) {
+      Drupal::logger('openagenda')->error($exception->getMessage());
     }
 
     return $data;
@@ -81,14 +85,13 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
    * @return array
    *   Data from the Openagenda server representing this agenda's settings.
    */
-  public function getAgendaSettings(string $agenda_uid)
-  {
+  public function getAgendaSettings(string $agenda_uid) {
     $data = [];
 
     try {
       $data = Json::decode($this->sdk->getAgenda($agenda_uid));
-    } catch (OpenAgendaSdkException $exception) {
-      watchdog_exception('openagenda.connector', $exception->getMessage());
+    } catch (\Exception $exception) {
+      Drupal::logger('openagenda')->error($exception->getMessage());
     }
 
     return $data;
@@ -113,6 +116,7 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
    *      - updatedAt.asc
    * @param bool $include_embedded
    *   Wether include embedded code in event html or not.
+   *
    * @return array|mixed
    *   Data from the OpenAgenda server, including an event array.
    */
@@ -121,8 +125,7 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
                                   int $from = 0,
                                   int $size = self::DEFAULT_EVENTS_SIZE,
                                   string $sort = 'timingsWithFeatured.asc',
-                                  bool $include_embedded = TRUE)
-  {
+                                  bool $include_embedded = TRUE) {
     // Build param array.
     $params = $filters;
     $params += ['from' => $from];
@@ -146,9 +149,7 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
    * @return array|null
    *   An array representing an event in this agenda.
    */
-  public function getEventBySlug(string $agenda_uid, string $slug)
-  {
-
+  public function getEventBySlug(string $agenda_uid, string $slug) {
     $data = $this->getData($agenda_uid, ['slug' => $slug, 'detailed' => 1]);
     $event = !empty($data['events']) ? array_pop($data['events']) : NULL;
 
@@ -168,8 +169,7 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
    * @return string
    *   The slug corresponding to the event at that offset in this agenda.
    */
-  protected function getEventSlugByOffset(string $agenda_uid, array $filters, int $from)
-  {
+  protected function getEventSlugByOffset(string $agenda_uid, array $filters, int $from) {
     $data = $this->getData($agenda_uid, $filters + ['detailed' => 1], $from, 1);
 
     if (!empty($data['events'])) {
@@ -193,8 +193,7 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
    * @return string
    *   The slug corresponding to the next event in this agenda.
    */
-  public function getNextEventSlug(string $agenda_uid, array $filters, int $from)
-  {
+  public function getNextEventSlug(string $agenda_uid, array $filters, int $from) {
     return $this->getEventSlugByOffset($agenda_uid, $filters, $from + 1);
   }
 
@@ -211,8 +210,7 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
    * @return string
    *   The slug corresponding to the previous event in this agenda.
    */
-  public function getPreviousEventSlug(string $agenda_uid, array $filters, int $from)
-  {
+  public function getPreviousEventSlug(string $agenda_uid, array $filters, int $from) {
     return $from > 0 ? getEventSlugByOffset($agenda_uid, $filters, $from - 1) : '';
   }
 
@@ -229,8 +227,7 @@ class OpenagendaConnector implements OpenagendaConnectorInterface
    * @return array
    *   An array with three events (previous, current, next).
    */
-  public function getEventTriplet(string $agenda_uid, array $filters, int $from)
-  {
+  public function getEventTriplet(string $agenda_uid, array $filters, int $from) {
     if ($from == 0) {
       $data = $this->getAgendaEvents($agenda_uid, $filters + ['detailed' => 1], $from, 2);
     }

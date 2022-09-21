@@ -2,20 +2,18 @@
 
 namespace Drupal\openagenda;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+use \Drupal;
 
 /**
  * Class OpenagendaEventProcessor.
  *
  * Prepares an agenda's data prior to display.
  */
-class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface
-{
+class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface {
   use StringTranslationTrait;
 
   /**
@@ -43,11 +41,12 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface
    * OpenagendaEventProcessor constructor.
    *
    * @param DateFormatterInterface $date_formatter
+   *   Date formatter.
    * @param OpenagendaHelperInterface $helper
+   *   OpenAgenda helper.
    */
-  public function __construct(DateFormatterInterface $date_formatter, OpenagendaHelperInterface $helper)
-  {
-    $this->config = \Drupal::config('openagenda.settings');
+  public function __construct(DateFormatterInterface $date_formatter, OpenagendaHelperInterface $helper) {
+    $this->config = Drupal::config('openagenda.settings');
     $this->dateFormatter = $date_formatter;
     $this->helper = $helper;
   }
@@ -66,8 +65,7 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface
    *   An agenda's render array or a simple markup to report
    *   that no agenda was found.
    */
-  public function buildRenderArray(array $event, EntityInterface $entity, array $context = [])
-  {
+  public function buildRenderArray(array $event, EntityInterface $entity, array $context = []) {
     $build = [];
 
     if ($entity->hasField('field_openagenda')) {
@@ -75,6 +73,7 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface
       $lang = $entity->get('field_openagenda')->language;
       $this->helper->localizeEvent($event, $lang);
 
+      $style = $this->config->get('openagenda.default_style', 'default');
       $build = [
         '#title' => $event['title'],
         '#theme' => 'openagenda_event_single',
@@ -86,6 +85,7 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface
           'html_head' => $this->processEventMetadata($event),
           'library' => [
             'openagenda/openagenda.event',
+            'openagenda/openagenda.style.' . $style,
           ],
           'drupalSettings' => [
             'openagenda' => [
@@ -95,11 +95,6 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface
           ],
         ],
       ];
-    }
-
-    // Defaut style library ?
-    if ($default_style = $this->config->get('openagenda.default_style')) {
-      $build['#attached']['library'][] = 'openagenda/openagenda.' . $default_style;
     }
 
     return $build;
@@ -113,11 +108,10 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface
    * @param string $lang
    *   Language code for date format.
    *
-   * @return TranslatableMarkup|null
+   * @return Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   TranslatableMarkup representing relative timing to event.
    */
-  public function processRelativeTimingToEvent(array $event, string $lang = 'default')
-  {
+  public function processRelativeTimingToEvent(array $event, string $lang = 'default') {
     $relative_timing = NULL;
 
     if (!empty($event) && !empty($event['timings'])) {
@@ -168,8 +162,7 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface
    * @return array
    *   An array of months and weeks with days and time range values.
    */
-  public function processEventTimetable(array $event, string $lang = 'default')
-  {
+  public function processEventTimetable(array $event, string $lang = 'default') {
     $timetable = [];
     $current_month = '';
     $current_month_timings = [];
@@ -267,8 +260,7 @@ class OpenagendaEventProcessor implements OpenagendaEventProcessorInterface
    * @return array
    *   Metadata array attachable through html_head in the render array.
    */
-  public function processEventMetadata(array $event)
-  {
+  public function processEventMetadata(array $event) {
     $metadata = [];
 
     // Attaching og:type and og:url.

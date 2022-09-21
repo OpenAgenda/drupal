@@ -1,6 +1,3 @@
-.oa-agenda {
-}
-
 .oa-list {
   padding: 0;
   margin: 0 !important;
@@ -195,11 +192,6 @@
   margin-bottom: 10px;
 }
 
-.oa-event-keywords {
-  padding: 0;
-  margin: -5px 0 15px !important;
-}
-
 .oa-event-keyword {
   display: inline-block;
   margin-right: 5px;
@@ -230,6 +222,7 @@
   width: 100%;
   margin: 0;
   background: transparent;
+  position: relative;
 }
 
 .oa-event-picture img {
@@ -314,19 +307,6 @@
   background: #41acdd;
 }
 
-.oa-map-filter .leaflet-marker-icon:before {
-  content: '';
-  position: absolute;
-  width: 40px !important;
-  height: 40px !important;
-  top: -5px !important;
-  left: -5px !important;
-  background: #41acdd;
-  opacity: .5;
-  border-radius: 50%;
-  z-index: -1;
-}
-
 .oa-active-filter .search {
   background: #41acdd;
   padding: 5px;
@@ -359,7 +339,7 @@
   color: #fff;
   width: 10px;
   display: inline-block;
-  margin-right: 5px;
+  margin-right: 10px;
   margin-left: 5px;
   top: -2px;
   position: absolute;
@@ -386,6 +366,7 @@
   appearance: none;
   outline: none !important;
   vertical-align: text-bottom;
+  margin-right: 10px;
 }
 
 .oa-filter input {
@@ -523,4 +504,48 @@
 
 .oa-event-map {
   height: 300px;
+}
+
+.oa-filter-total {
+  margin-left: 7px;
+  font-weight: 500;
+}
+
+.map-container .leaflet-container {
+  height: 180px;
+}
+
+.oa-choice-option-label {
+  text-transform: capitalize;
+}
+
+.oa-event-favorite {
+  position: absolute;
+  right: 10px;
+  z-index: 2;
+  color: #fff;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  text-indent: 9999px;
+  overflow: hidden;
+  background-image: url(../img/heart-off.svg);
+  background-size: 66%;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, .2);
+  border-radius: 5px;
+}
+
+.oa-event-favorite.oa-event-favorite--big {
+  right: 15px;
+  top: 15px;
+  width: 34px;
+  height: 34px;
+}
+
+.oa-event-favorite.active {
+  background-image: url(../img/heart.svg);
 }

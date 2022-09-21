@@ -2,14 +2,14 @@
 
 namespace Drupal\openagenda\Controller;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
-use Drupal\Core\Url;
 use Drupal\openagenda\OpenagendaAgendaProcessorInterface;
 use Drupal\openagenda\OpenagendaEventProcessorInterface;
 use Drupal\openagenda\OpenagendaHelperInterface;
@@ -18,7 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Drupal\Component\Serialization\Json;
 
 /**
  * The OpenAgenda Controller.
@@ -71,8 +70,7 @@ class OpenagendaController extends ControllerBase
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container)
-  {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('openagenda.helper'),
       $container->get('openagenda.agenda_processor'),
@@ -83,18 +81,17 @@ class OpenagendaController extends ControllerBase
   /**
    * Renders themed event.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $node
+   * @param EntityInterface $node
    *   The node the event relates to.
    * @param array $event
    *   The event parameter, upcasted.
-   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param Request $request
    *   The current request object.
    *
    * @return array
    *   A single event render array.
    */
-  public function event(EntityInterface $node, array $event, Request $request)
-  {
+  public function event(EntityInterface $node, array $event, Request $request) {
     // Make sure that we successfully upcasted an event and that our node is
     // a valid OpenAgenda node.
     if (empty($event) || !$node->hasField('field_openagenda')) {
@@ -109,16 +106,20 @@ class OpenagendaController extends ControllerBase
 
   /**
    * @param EntityInterface $node
+   *   The entity object.
    * @param Request $request
+   *   The request object.
+   *
    * @return JsonResponse
-   * @throws \OpenAgendaSdk\OpenAgendaSdkException
+   *   The response as json.
+   *
+   * @throws \Exception
    */
-  public function filtersCallback(EntityInterface $node, Request $request)
-  {
+  public function filtersCallback(EntityInterface $node, Request $request) {
     if ($node->hasField('field_openagenda')) {
       $queryInfo = UrlHelper::parse($request->getUri());
       $filters = $queryInfo['query'];
-      $filters += ['detailed' => 1]; // Required to get lat/lon data.
+      $filters += ['detailed' => 1, 'size' => 0]; // Required to get lat/lon data.
       $agenda_uid = $node->get('field_openagenda')->uid;
       $data = Json::decode($this->sdk->getEvents($agenda_uid, $filters), TRUE);
 
@@ -131,27 +132,23 @@ class OpenagendaController extends ControllerBase
   /**
    * Handle AJAX calls.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $node
+   * @param EntityInterface $node
    *   The OpenAgenda node for which we call an Ajax update.
-   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param Request $request
    *   The current request object.
    *
-   * @return \Drupal\Core\Ajax\AjaxResponse
+   * @return AjaxResponse
    *   An Ajax response containing the commands to execute.
    */
-  public function ajaxCallback(EntityInterface $node, Request $request)
-  {
+  public function ajaxCallback(EntityInterface $node, Request $request) {
     $response = new AjaxResponse();
 
     if ($node->hasField('field_openagenda')) {
-      // Remove _wrapper_format from request so that it doesn't bleed
-      // in our pager links.
-      // see https://www.drupal.org/project/drupal/issues/2504709
       $request->query->remove(MainContentViewSubscriber::WRAPPER_FORMAT);
       $request->request->remove(MainContentViewSubscriber::WRAPPER_FORMAT);
 
       // Re-render the agenda with the new parameters.
-      $content = $this->agendaProcessor->buildRenderArray($node);
+      $content = $this->agendaProcessor->buildRenderArray($node, TRUE);
       $selector = '#oa-wrapper';
 
       $response->addCommand(new ReplaceCommand($selector, $content));
