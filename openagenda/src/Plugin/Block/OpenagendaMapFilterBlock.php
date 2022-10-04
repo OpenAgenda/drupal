@@ -98,6 +98,13 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
       '#default_value' => isset($config['map_tiles_attribution']) ? $config['map_tiles_attribution'] : $this->config->get('openagenda.default_map_filter_tiles_attribution'),
     ];
 
+    $form['map_filter_label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Input label'),
+      '#description' => $this->t('Label for the input field.'),
+      '#default_value' => isset($config['map_filter_label']) ? $config['map_filter_label'] : $this->config->get('openagenda.default_map_filter_label'),
+    ];
+
     return $form;
   }
 
@@ -109,6 +116,7 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
     $values = $form_state->getValues();
     $this->configuration['map_tiles_url'] = $values['map_tiles_url'];
     $this->configuration['map_tiles_attribution'] = $values['map_tiles_attribution'];
+    $this->configuration['map_filter_label'] = $values['map_filter_label'];
   }
 
   /**
@@ -117,7 +125,6 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
   public function build() {
     $node = $this->getContextValue('node');
     $block = [];
-
     // Check that we have an OpenAgenda node and that we are hitting the base
     // route (not an event).
     if ($node && $node->hasField('field_openagenda')
@@ -125,11 +132,13 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
       $lang = $this->helper->getPreferredLanguage($node->get('field_openagenda')->language);
       $map_tiles_url = !empty($this->configuration['map_tiles_url']) ? $this->configuration['map_tiles_url'] : $this->config->get('openagenda.default_map_filter_tiles_uri');
       $map_tiles_attribution = !empty($this->configuration['map_tiles_attribution']) ? $this->configuration['map_tiles_attribution'] : $this->config->get('openagenda.default_map_filter_tiles_attribution');
+      $map_filter_label = !empty($this->configuration['map_filter_label']) ? $this->configuration['map_filter_label'] : $this->config->get('openagenda.default_map_filter_label');
 
       $block = [
         '#theme' => 'block__openagenda_map_filter',
         '#map_tiles_url' => $map_tiles_url,
         '#map_tiles_attribution' => $map_tiles_attribution,
+        '#map_filter_label' => $map_filter_label,
         '#auto_search' => TRUE,
         '#lang' => $lang,
       ];
@@ -142,6 +151,15 @@ class OpenagendaMapFilterBlock extends BlockBase implements ContainerFactoryPlug
     }
 
     return $block;
+  }
+
+  /**
+   * @return int
+   *   Cache max age.
+   */
+  public function getCacheMaxAge()
+  {
+    return 0;
   }
 
 }

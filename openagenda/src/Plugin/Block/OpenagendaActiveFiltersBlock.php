@@ -85,4 +85,13 @@ class OpenagendaActiveFiltersBlock extends BlockBase implements ContainerFactory
     return $block;
   }
 
+  /**
+   * @return int
+   *   Cache max age.
+   */
+  public function getCacheMaxAge()
+  {
+    return 0;
+  }
+
 }

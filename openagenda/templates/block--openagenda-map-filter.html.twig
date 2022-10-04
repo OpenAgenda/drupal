@@ -17,5 +17,5 @@
 {{ attach_library('openagenda/openagenda.openagenda-leaflet') }}
 
 <div class="oa-map-filter map-container oa-filter"
-  data-oa-filter="map"
-  data-oa-filter-params="{&quot;tileUrl&quot;:&quot;{{ map_tiles_url }}&quot;,&quot;tileAttribution&quot;:&quot;{{ map_tiles_attribution }}&quot;,&quot;searchWithMap&quot;:{{ auto_search ? 'true' : 'false'}},&quot;searchMessage&quot;:&quot;{{ 'Search with map'|t }}&quot;,&quot;type&quot;:&quot;map&quot;,&quot;name&quot;:&quot;geo&quot;}"></div>
+     data-oa-filter="map"
+     data-oa-filter-params="{&quot;tileUrl&quot;:&quot;{{ map_tiles_url }}&quot;,&quot;tileAttribution&quot;:&quot;{{ map_tiles_attribution }}&quot;,&quot;searchWithMap&quot;:{{ auto_search ? 'true' : 'false'}},&quot;searchMessage&quot;:&quot;{{ map_filter_label is defined ? map_filter_label|t : 'Search with map'|t }}&quot;,&quot;type&quot;:&quot;map&quot;,&quot;name&quot;:&quot;geo&quot;}"></div>

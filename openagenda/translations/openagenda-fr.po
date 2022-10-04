@@ -99,20 +99,18 @@ msgid "Number of events displayed per page. Enter 0 to show all events."
 msgstr "Nombre d'événements par page. 0 pour afficher tous les événements."
 
 msgid "Default language"
-msgstr "Language par défaut"
+msgstr "Langue par défaut"
 
 msgid "The default language to use for OpenAgendas and events."
-msgstr "Le language à utiliser par défault."
+msgstr "Le langage à utiliser par défault."
 
 msgid "Include embedded content"
 msgstr "Inclure le contenu intégré (PDF, vidéo, visionneuse, ...)"
 
 msgid ""
-"Include embedded HTML content in event descriptions. Warning: this is a "
-"security risk."
+"Include embedded HTML content in event descriptions."
 msgstr ""
-"Inclure le contenu intégré dans la description longue des événements. "
-"Attention: risque de sécurité."
+"Inclure le contenu intégré dans la description longue des événements."
 
 msgid "OpenAgenda default style"
 msgstr "Style par défaut"
@@ -122,6 +120,9 @@ msgstr "Aucun"
 
 msgid "Events per column"
 msgstr "Événement(s) par colonne"
+
+msgid "Use site's language"
+msgstr "Utiliser la langue du site"
 
 msgid "Default map tiles URL"
 msgstr "URL par défaut des tuiles"
@@ -231,6 +232,9 @@ msgstr "Coller l'URL complet de l'OpenAgenda avec les filtres correspondants."
 msgid "Placeholder for the input field."
 msgstr "Placeholder du champ de recherche."
 
+msgid "Search in this agenda"
+msgstr "Rechercher dans cet agenda"
+
 msgid "OpenAgenda settings"
 msgstr "Configuration OpenAgenda"
 
@@ -288,6 +292,21 @@ msgstr "Limiter aux événements en cours et à venir"
 
 msgid "General pre-filter"
 msgstr "Préfiltre général"
+
+msgid "Search with map"
+msgstr "Actualiser au déplacement de la carte"
+
+msgid "Input label"
+msgstr "Label du champ"
+
+msgid "Default map filter label"
+msgstr "Label du champ par défault"
+
+msgid "Text to use as the map filter input field label."
+msgstr "Texte à utiliser par défaut pour le champ du filtre carte."
+
+msgid "Label for the input field."
+msgstr "Label pour le champ."
 
 msgid ""
 "Present a subset of the agenda on your page by defining this pre-filter. Set the desired filter either on the "

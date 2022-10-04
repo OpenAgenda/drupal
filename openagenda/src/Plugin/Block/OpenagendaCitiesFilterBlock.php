@@ -85,4 +85,13 @@ class OpenagendaCitiesFilterBlock extends BlockBase implements ContainerFactoryP
     return $block;
   }
 
+  /**
+   * @return int
+   *   Cache max age.
+   */
+  public function getCacheMaxAge()
+  {
+    return 0;
+  }
+
 }
