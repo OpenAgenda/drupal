@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "openagenda_cities_filter_block",
  *   admin_label = @Translation("OpenAgenda - Cities filter"),
  *   category = @Translation("OpenAgenda"),
- *   context_definitions = {
+ *   context = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   },
  * )
@@ -83,6 +83,15 @@ class OpenagendaCitiesFilterBlock extends BlockBase implements ContainerFactoryP
     }
 
     return $block;
+  }
+
+  /**
+   * @return int
+   *   Cache max age.
+   */
+  public function getCacheMaxAge()
+  {
+    return 0;
   }
 
 }

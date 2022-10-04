@@ -17,27 +17,27 @@
 
 {{ attach_library('openagenda/openagenda.filters') }}
 
-<div id="oa-agenda" class="oa-agenda">
-  <div id="oa-wrapper">
-    {% if total and total > 0 %}
-      <div class="wbg exports">
-        <a
-          role="button"
-          href="https://openagenda.com/agendas/{{ agenda_uid }}/events.v2.xlsx{{ search_string ? '?' ~ search_string }}">xls</a>
-        <a
-          role="button"
-          href="https://openagenda.com/agendas/{{ agenda_uid }}/events.v2.rss{{ search_string ? '?' ~ search_string }}">rss</a>
-      </div>
-    {% else %}
-      {{ 'There are no event matching these search parameters.'|t }}
-    {% endif %}
-    <ul class="oa-list oa-list--x{{ columns }}">
-      {% for event in events %}
-        <li class="oa-list__item">
-          {{ event.content }}
-        </li>
-      {% endfor %}
-    </ul>
-    {{ pager }}
-  </div>
-</div>
+{% if not ajax %}<div id="oa-agenda" class="oa-agenda">{% endif %}
+    <div id="oa-wrapper">
+        {% if total and total > 0 %}
+            <div class="wbg exports">
+                <a
+                        role="button"
+                        href="https://openagenda.com/agendas/{{ agenda_uid }}/events.v2.xlsx{{ search_string ? '?' ~ search_string }}">xls</a>
+                <a
+                        role="button"
+                        href="https://openagenda.com/agendas/{{ agenda_uid }}/events.v2.rss{{ search_string ? '?' ~ search_string }}">rss</a>
+            </div>
+        {% else %}
+            {{ 'There are no event matching these search parameters.'|t }}
+        {% endif %}
+        <ul class="oa-list oa-list--x{{ columns }}">
+            {% for event in events %}
+                <li class="oa-list__item">
+                    {{ event.content }}
+                </li>
+            {% endfor %}
+        </ul>
+        {{ pager }}
+    </div>
+    {% if not ajax %}</div>{% endif %}

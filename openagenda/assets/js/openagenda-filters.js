@@ -17,7 +17,6 @@
       const ajaxUrl = drupalSettings.openagenda.ajaxUrl;
       const filtersUrl = drupalSettings.openagenda.filtersUrl;
       const preFilters = drupalSettings.openagenda.preFilters;
-      const agenda = document.querySelector('.oa-agenda');
 
       // window.oa.
       if (typeof window.oa === 'undefined') {
@@ -43,7 +42,8 @@
             oa.queryParams = queryParams;
             computeQueryParams(preFilters,true);
 
-            // Update filters and widgets.
+            // Update location.
+            oa.filtersRef.updateLocation(oa.values);
             oa.updateFiltersAndWidgets();
           },
           onFilterChange: async (values, aggregations, filtersRef, _form) => {
@@ -52,17 +52,23 @@
             let queryParams = {...values, aggregations};
             oa.queryParams = queryParams;
             computeQueryParams(preFilters,false);
+            oa.filtersRef.updateLocation(oa.values);
 
             // Show Ajax Throbber, automatically removed when content is replaced/page reloaded.
             $('#oa-wrapper').append(Drupal.theme.ajaxProgressIndicatorFullscreen());
 
             // Load event then update filters.
+            $.when(Drupal.ajax({
+              url: ajaxUrl + '?' + $.param(oa.queryParams)
+            }).execute()).then(oa.updateFiltersAndWidgets());
+
             Drupal.ajax({
               url: ajaxUrl + '?' + $.param(oa.queryParams)
-            }).execute();
+            }).execute().done(function() {
+              oa.updateFiltersAndWidgets()
+            });
           },
           updateFiltersAndWidgets: async () => {
-            // Update location, filters & widgets.
             if (!oa.filtersRef) {
               return;
             }
@@ -70,25 +76,13 @@
               url: filtersUrl + '?' + $.param(oa.queryParams),
               type: 'GET',
               dataType: 'json',
-              async: false,
+              async: true,
               complete: (data) => {
                 oa.filtersRef.updateFiltersAndWidgets(oa.values, data.responseJSON);
-                oa.filtersRef.updateLocation(oa.values);
               }
             });
           }
         };
-      }
-
-      // Agenda mutation observer.
-      if (agenda !== undefined) {
-        const observer = new MutationObserver((mutations, observer) => {
-          oa.updateFiltersAndWidgets();
-        });
-        observer.observe(agenda, {
-          subtree: true,
-          attributes: true,
-        });
       }
 
       // Mix preFilters & oa queryParams/values.

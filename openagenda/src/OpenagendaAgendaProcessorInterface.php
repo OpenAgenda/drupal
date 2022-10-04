@@ -11,16 +11,21 @@ use Drupal\Core\Entity\EntityInterface;
  */
 interface OpenagendaAgendaProcessorInterface {
 
-  /**
-   * Build an agenda's render array.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   An entity with a field_openagenda attached to it.
-   *
-   * @return array
-   *   An agenda's render array or a simple markup to report
-   *   that no agenda was found.
-   */
-  public function buildRenderArray(EntityInterface $entity);
+    /**
+     * Build an agenda's render array.
+     *
+     * @param \Drupal\Core\Entity\EntityInterface $entity
+     *   An entity with a field_openagenda attached to it.
+     *
+     * @param bool|null $ajax
+     *   Whether it is an ajax or not.
+     *
+     * @param int|null $page
+     *   Whether it is an ajax or not.
+     *
+     * @return array
+     *   The render array.
+     */
+    public function buildRenderArray(EntityInterface $entity, ?bool $ajax = FALSE, ?int $page = NULL);
 
 }

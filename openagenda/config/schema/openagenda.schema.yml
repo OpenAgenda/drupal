@@ -23,6 +23,9 @@ openagenda.settings:
         default_map_filter_tiles_attribution:
           type: string
           label: 'Default map tiles attribution'
+        default_map_filter_label:
+          type: label
+          label: 'Default map filter label'
         default_search_filter_placeholder:
           type: label
           label: 'Default search filter placeholder'

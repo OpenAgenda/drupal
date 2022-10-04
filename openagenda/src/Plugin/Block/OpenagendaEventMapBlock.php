@@ -50,7 +50,8 @@ class OpenagendaEventMapBlock extends BlockBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, OpenagendaHelperInterface $helper) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, OpenagendaHelperInterface $helper)
+  {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->config = Drupal::config('openagenda.settings');
     $this->routeMatch = $route_match;
@@ -60,7 +61,8 @@ class OpenagendaEventMapBlock extends BlockBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
+  {
     return new static(
       $configuration,
       $plugin_id,
@@ -73,14 +75,16 @@ class OpenagendaEventMapBlock extends BlockBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  protected function blockAccess(AccountInterface $account) {
+  protected function blockAccess(AccountInterface $account)
+  {
     return AccessResult::allowedIfHasPermission($account, 'access content');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build()
+  {
     $node = $this->getContextValue('node');
     $block = [];
     $event = $this->routeMatch->getParameter('event');
@@ -124,7 +128,8 @@ class OpenagendaEventMapBlock extends BlockBase implements ContainerFactoryPlugi
    * @return int
    *   Cache max age.
    */
-  public function getCacheMaxAge() {
+  public function getCacheMaxAge()
+  {
     return 0;
   }
 
