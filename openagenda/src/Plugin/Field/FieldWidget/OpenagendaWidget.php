@@ -92,7 +92,7 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
     $element['current'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Only current and upcoming events'),
-      '#description' => $this->t('Display only current and upcoming events. If relative date filter block is configured to be displayed on agenda page, it will be disactivated on this openagenda node page.'),
+      '#description' => $this->t('Display only current and upcoming events. If relative date filter block is configured to be displayed on agenda page, it will be disactivated on every openagenda node page.'),
       '#return_value' => TRUE,
       '#default_value' => isset($items[$delta]->current) ? $items[$delta]->current : ($this->config->get('openagenda.current') ?? FALSE),
     ];
@@ -119,7 +119,7 @@ class OpenagendaWidget extends WidgetBase implements ContainerFactoryPluginInter
     $element['include_embedded'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Include embedded content'),
-      '#description' => $this->t('Include embedded HTML content in event descriptions. Warning: this is a security risk.'),
+      '#description' => $this->t('Include embedded HTML content in event descriptions.'),
       '#return_value' => TRUE,
       '#default_value' => isset($items[$delta]->include_embedded) ? $items[$delta]->include_embedded : $this->config->get('openagenda.include_embedded'),
     ];

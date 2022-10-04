@@ -88,4 +88,13 @@ class OpenagendaRelativeFilterBlock extends BlockBase implements ContainerFactor
     return $block;
   }
 
+  /**
+   * @return int
+   *   Cache max age.
+   */
+  public function getCacheMaxAge()
+  {
+    return 0;
+  }
+
 }

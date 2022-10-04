@@ -165,4 +165,13 @@ class OpenagendaAdditionalFieldFilterBlock extends BlockBase implements Containe
     $this->configuration['additional_field'] = $values['additional_field'];
   }
 
+  /**
+   * @return int
+   *   Cache max age.
+   */
+  public function getCacheMaxAge()
+  {
+    return 0;
+  }
+
 }

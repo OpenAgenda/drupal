@@ -17,7 +17,7 @@
 
 {{ attach_library('openagenda/openagenda.filters') }}
 
-<div id="oa-agenda" class="oa-agenda">
+{% if not ajax %}<div id="oa-agenda" class="oa-agenda">{% endif %}
   <div id="oa-wrapper">
     {% if total and total > 0 %}
       <div class="wbg exports">
@@ -40,4 +40,4 @@
     </ul>
     {{ pager }}
   </div>
-</div>
+{% if not ajax %}</div>{% endif %}

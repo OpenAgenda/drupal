@@ -102,6 +102,7 @@ function openagenda_theme($existing, $type, $theme, $path) {
         'pager' => NULL,
         'lang' => 'fr',
         'columns' => NULL,
+        'ajax' => FALSE,
       ],
     ],
     // Event as displayed in the list (agenda).
@@ -156,6 +157,7 @@ function openagenda_theme($existing, $type, $theme, $path) {
         'agenda_uid' => '',
         'map_tiles_url' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         'map_tiles_attribution' => NULL,
+        'map_filter_label' => NULL,
         'auto_search' => TRUE,
         'lang' => 'fr',
       ],

@@ -85,4 +85,13 @@ class OpenagendaFavoritesFilterBlock extends BlockBase implements ContainerFacto
     return $block;
   }
 
+  /**
+   * @return int
+   *   Cache max age.
+   */
+  public function getCacheMaxAge()
+  {
+    return 0;
+  }
+
 }

@@ -2,7 +2,7 @@ name: OpenAgenda
 description: 'Integrates OpenAgenda.'
 package: OpenAgenda
 type: module
-core_version_requirement: ^8.8 || ^9
+core_version_requirement: ^8.8 || ^9 || ^10
 configure: openagenda.form
 'interface translation project': openagenda
 'interface translation server pattern': modules/contrib/openagenda/translations/openagenda-%language.po

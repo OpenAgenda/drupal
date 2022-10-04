@@ -85,7 +85,7 @@ class OpenagendaForm extends ConfigFormBase {
     $form['default_openagenda_settings']['include_embedded'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Include embedded content'),
-      '#description' => $this->t('Include embedded HTML content in event descriptions. Warning: this is a security risk.'),
+      '#description' => $this->t('Include embedded HTML content in event descriptions.'),
       '#return_value' => TRUE,
       '#default_value' => $config->get('openagenda.include_embedded'),
     ];
@@ -144,6 +144,13 @@ class OpenagendaForm extends ConfigFormBase {
       '#default_value' => $config->get('openagenda.default_map_filter_tiles_attribution'),
     ];
 
+    $form['default_map_filter_settings']['default_map_filter_label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Default map filter label'),
+      '#description' => $this->t('Text to use as the map filter input field label.'),
+      '#default_value' => $config->get('openagenda.default_map_filter_label'),
+    ];
+
     $form['default_search_filter_settings'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Default search filter settings'),
@@ -173,6 +180,7 @@ class OpenagendaForm extends ConfigFormBase {
     $config->set('openagenda.default_columns', $form_state->getValue('default_columns'));
     $config->set('openagenda.default_map_filter_tiles_uri', $form_state->getValue('default_map_filter_tiles_uri'));
     $config->set('openagenda.default_map_filter_tiles_attribution', $form_state->getValue('default_map_filter_tiles_attribution'));
+    $config->set('openagenda.default_map_filter_label', $form_state->getValue('default_map_filter_label'));
     $config->set('openagenda.default_search_filter_placeholder', $form_state->getValue('default_search_filter_placeholder'));
     $config->save();
 

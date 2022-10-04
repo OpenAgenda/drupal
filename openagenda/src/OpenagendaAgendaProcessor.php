@@ -78,14 +78,20 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   An entity with a field_openagenda attached to it.
    *
+   * @param bool|null $ajax
+   *   Whether it is an ajax or not.
+   *
+   * @param int|null $page
+   *   Whether it is an ajax or not.
+   *
    * @return array
-   *   An agenda's render array or a simple markup to report
-   *   that no agenda was found.
+   *   The render array.
    */
-  public function buildRenderArray(EntityInterface $entity, ?bool $reload = FALSE, ?int $page = NULL) {
+  public function buildRenderArray(EntityInterface $entity, ?bool $ajax = FALSE, ?int $page = NULL) {
     if (!$entity->hasField('field_openagenda')) {
       return [];
     }
+
     // Get request parameters : page.
     $size = (int) $entity->get('field_openagenda')->events_per_page;
     $from = $page ?? $this->pagerParameters->findPage() * $size;
@@ -149,6 +155,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
       '#lang' => $language,
       '#columns' => $this->config->get('openagenda.default_columns', 3),
       '#filters' => $filters,
+      '#ajax' => $ajax,
       '#attached' => [
         'library' => [
           'openagenda/openagenda.pager',
@@ -165,7 +172,7 @@ class OpenagendaAgendaProcessor implements OpenagendaAgendaProcessorInterface {
       ],
     ];
 
-    if (!$reload) {
+    if (!$ajax) {
       $style = $this->config->get('openagenda.default_style', 'default');
       $build['#attached']['library'][] = 'openagenda/openagenda.style.' . $style;
     }

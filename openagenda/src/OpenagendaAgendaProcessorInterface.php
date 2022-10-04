@@ -17,10 +17,15 @@ interface OpenagendaAgendaProcessorInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   An entity with a field_openagenda attached to it.
    *
+   * @param bool|null $ajax
+   *   Whether it is an ajax or not.
+   *
+   * @param int|null $page
+   *   Whether it is an ajax or not.
+   *
    * @return array
-   *   An agenda's render array or a simple markup to report
-   *   that no agenda was found.
+   *   The render array.
    */
-  public function buildRenderArray(EntityInterface $entity);
+  public function buildRenderArray(EntityInterface $entity, ?bool $ajax = FALSE, ?int $page = NULL);
 
 }

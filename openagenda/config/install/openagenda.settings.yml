@@ -9,4 +9,4 @@ openagenda:
   default_map_filter_tiles_uri: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
   default_map_filter_tiles_attribution: 'OpenStreetMap contributors'
   default_search_filter_placeholder: 'Search in this agenda'
-
+  default_map_filter_label: 'Search with map'
